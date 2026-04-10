@@ -14,143 +14,72 @@
 
     /* HERO */
     .hero{
-      position:relative;
-      height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      text-align:center;
+      position:relative;height:100vh;display:flex;justify-content:center;align-items:center;text-align:center;
       background:url('WALLPAPER.png') no-repeat center/cover;
     }
-
-    .overlay{
-      position:absolute;
-      width:100%;height:100%;
-      background:linear-gradient(to bottom,rgba(255,122,24,0.25),rgba(255,255,255,0.15));
-    }
-
+    .overlay{position:absolute;width:100%;height:100%;background:linear-gradient(to bottom,rgba(255,122,24,0.25),rgba(255,255,255,0.15))}
     .content{position:relative;z-index:2}
-
-    .title{
-      font-family:'Bebas Neue',sans-serif;
-      font-size:clamp(60px,12vw,140px);
-      letter-spacing:12px;
-      color:transparent;
-      -webkit-text-stroke:2px #fff;
-      text-shadow:0 4px 20px rgba(0,0,0,0.3);
-    }
-
-    .subtitle{
-      margin-top:20px;
-      font-size:clamp(14px,3vw,22px);
-      color:#ffffff;
-      font-weight:300;
-      letter-spacing:2px;
-      text-shadow:0 2px 10px rgba(0,0,0,0.3);
-      font-family:'Montserrat', sans-serif;
-    }
+    .title{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,12vw,140px);letter-spacing:12px;color:transparent;-webkit-text-stroke:2px #fff;text-shadow:0 4px 20px rgba(0,0,0,0.3)}
+    .subtitle{margin-top:20px;font-size:clamp(14px,3vw,22px);color:#fff;font-weight:300;letter-spacing:2px;text-shadow:0 2px 10px rgba(0,0,0,0.3)}
 
     .wave{position:absolute;bottom:0;width:100%;height:200px}
     .wave svg{width:100%;height:100%}
 
-    /* NEXT SECTION */
+    /* CONTENT SECTION (continuous scroll) */
     .next-section{
-      min-height:100vh;
-      background:#fff;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-start;
-      align-items:center;
-      padding:20px 20px 60px;
-      gap:40px;
-    }
-
-    .charts{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:40px;
-      width:100%;
-      max-width:1200px;
-      opacity:0;
-      transform:translateY(50px);
-      transition:0.8s;
-    }
-
-    .charts.show{
-      opacity:1;
-      transform:translateY(0);
-    }
-
-    .card{
-      background:#f9f9f9;
-      padding:25px;
-      border-radius:18px;
-      text-align:center;
-      box-shadow:0 10px 30px rgba(0,0,0,0.1);
-      transition:all 0.35s ease;
-      cursor:pointer;
-    }
-
-    /* HOVER POP-UP EFFECT */
-    .card:hover{
-      transform:translateY(-12px) scale(1.05);
-      box-shadow:0 20px 50px rgba(0,0,0,0.2);
-    }
-
-    .donut{
-      width:140px;
-      height:140px;
-      border-radius:50%;
-      margin:0 auto 15px;
-      position:relative;
-    }
-
-    .donut::after{
-      content:'';
-      position:absolute;
-      top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      width:80px;height:80px;
-      background:#fff;
-      border-radius:50%;
-    }
-
-    .value{
-      position:absolute;
-      top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      font-weight:bold;
-      color:#ff7a18;
-      z-index:2;
-      font-size:20px;
-    }
-
-    /* DONUT COLORS */
-    .aesthetic{background:conic-gradient(#ff7a18 0% 80%, #eee 80%)}
-    .cowork{background:conic-gradient(#ff7a18 0% 70%, #eee 70%)}
-    .family{background:conic-gradient(#ff7a18 0% 60%, #eee 60%)}
-    .romantic{background:conic-gradient(#ff7a18 0% 50%, #eee 50%)}
-
-    /* TITLE STYLE (lebih aesthetic) */
-    .card p{
-      font-family:'Montserrat', sans-serif;
-      font-size:16px;
-      margin-top:10px;
-      color:#333;
-      letter-spacing:2px;
-      font-weight:400;
+      background:#fff;display:flex;flex-direction:column;align-items:center;
+      padding:20px 20px 40px;gap:28px; /* lebih rapat biar nyambung */
     }
 
     .section-title{
       font-family:'Bebas Neue', sans-serif;
       font-size:clamp(40px,6vw,80px);
-      color:#ff7a18;
-      letter-spacing:8px;
-      text-align:center;
+      color:#ff7a18;letter-spacing:8px;text-align:center;
     }
+
+    .charts{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:40px;
+      width:100%;max-width:1200px;opacity:0;transform:translateY(50px);transition:0.8s;
+    }
+    .charts.show{opacity:1;transform:translateY(0)}
+
+    .card{
+      background:#f9f9f9;padding:25px;border-radius:18px;text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);transition:all .35s ease;cursor:pointer;
+    }
+    .card:hover{transform:translateY(-12px) scale(1.05);box-shadow:0 20px 50px rgba(0,0,0,0.2)}
+
+    .donut{width:140px;height:140px;border-radius:50%;margin:0 auto 15px;position:relative}
+    .donut::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;background:#fff;border-radius:50%}
+    .value{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-weight:bold;color:#ff7a18;z-index:2;font-size:20px}
+
+    .aesthetic{background:conic-gradient(#ff7a18 0% 80%, #eee 80%)}
+    .cowork{background:conic-gradient(#ff7a18 0% 70%, #eee 70%)}
+    .family{background:conic-gradient(#ff7a18 0% 60%, #eee 60%)}
+    .romantic{background:conic-gradient(#ff7a18 0% 50%, #eee 50%)}
+
+    .card p{font-family:'Montserrat', sans-serif;font-size:16px;margin-top:10px;color:#333;letter-spacing:2px}
+
+    /* GALLERY (menyatu, tanpa jeda halaman) */
+    .gallery-wrap{width:100%;max-width:1000px;display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:8px}
+
+    .slider{position:relative;width:100%;overflow:hidden}
+    .slides{display:flex;transition:transform 1.2s cubic-bezier(0.25,0.8,0.25,1);width:300%}
+    .slide{flex:0 0 100%;width:100%;height:360px;object-fit:cover;border-radius:22px}
+
+    .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;font-size:20px;padding:8px 12px;border-radius:50%;cursor:pointer}
+    .nav:hover{background:#ff7a18}
+    .prev{left:10px}
+    .next{right:10px}
+
+    /* indicators . . _ */
+    .dots{display:flex;gap:10px;justify-content:center;margin-top:6px}
+    .dot{width:10px;height:10px;border-radius:50%;background:#ddd;transition:.3s}
+    .dot.active{width:24px;border-radius:8px;background:#ff7a18}
 
     @media(max-width:600px){
       .wave{height:150px}
+      .slide{height:260px}
     }
   </style>
 </head>
@@ -163,7 +92,6 @@
     <div class="title">COFFETERA</div>
     <div class="subtitle">Find Your Perfect Coffee Spot</div>
   </div>
-
   <div class="wave">
     <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
       <path fill="#fff" fill-opacity="0.9" d="M0,160L60,165.3C120,171,240,181,360,176C480,171,600,149,720,149.3C840,149,960,171,1080,181.3C1200,192,1320,192,1380,192L1440,192L1440,320L0,320Z"></path>
@@ -174,136 +102,75 @@
 
 <section class="next-section">
   <div class="section-title">COFFEE INSIGHT</div>
-  <div class="charts" id="charts">
 
+  <div class="charts" id="charts">
     <div class="card">
-      <div class="donut aesthetic">
-        <div class="value">80%</div>
-      </div>
+      <div class="donut aesthetic"><div class="value">80%</div></div>
       <p>Aesthetic Coffee</p>
     </div>
-
     <div class="card">
-      <div class="donut cowork">
-        <div class="value">70%</div>
-      </div>
+      <div class="donut cowork"><div class="value">70%</div></div>
       <p>Co-Working Coffee</p>
     </div>
-
     <div class="card">
-      <div class="donut family">
-        <div class="value">60%</div>
-      </div>
+      <div class="donut family"><div class="value">60%</div></div>
       <p>Family Coffee</p>
     </div>
-
     <div class="card">
-      <div class="donut romantic">
-        <div class="value">50%</div>
-      </div>
+      <div class="donut romantic"><div class="value">50%</div></div>
       <p>Romantic Coffee</p>
     </div>
-
   </div>
-</section>
 
-<script>
-const charts = document.getElementById('charts');
+  <!-- SPECIAL FOR YOU (langsung nyambung di bawah diagram) -->
+  <div class="section-title" style="margin-top:10px">SPECIAL FOR YOU</div>
 
-const observer = new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      charts.classList.add('show');
-    }
-  })
-},{threshold:0.3});
-
-observer.observe(charts);
-</script>
-
-<!-- SPECIAL FOR YOU -->
-<section class="gallery-section">
-  <div class="section-title">SPECIAL FOR YOU</div>
-
-  <div class="slider">
-    <button class="nav prev" onclick="slide(-1)">&#10094;</button>
-
-    <div class="slides" id="slides">
-      <img src="1.png" class="slide">
-      <img src="2.png" class="slide">
-      <img src="3.png" class="slide">
+  <div class="gallery-wrap">
+    <div class="slider">
+      <button class="nav prev" onclick="slide(-1)">&#10094;</button>
+      <div class="slides" id="slides">
+        <img src="1.png" class="slide">
+        <img src="2.png" class="slide">
+        <img src="3.png" class="slide">
+      </div>
+      <button class="nav next" onclick="slide(1)">&#10095;</button>
     </div>
 
-    <button class="nav next" onclick="slide(1)">&#10095;</button>
+    <div class="dots" id="dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
   </div>
 </section>
 
-<style>
-.gallery-section{
-  min-height:100vh;
-  background:#fff;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:40px;
-  padding:40px 20px;
-}
-
-.slider{
-  position:relative;
-  width:90%;
-  max-width:900px;
-  overflow:hidden;
-}
-
-.slides{
-  display:flex;
-  transition:transform 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-  width:300%;
-}
-
-.slide{
-  flex:0 0 100%;
-  width:100%;
-  height:300px;
-  object-fit:cover;
-  border-radius:20px;
-}
-
-.nav{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  background:rgba(0,0,0,0.4);
-  color:#fff;
-  border:none;
-  font-size:20px;
-  padding:8px 12px;
-  border-radius:50%;
-  cursor:pointer;
-}
-
-.nav:hover{background:#ff7a18}
-.prev{left:5px}
-.next{right:5px}
-</style>
-
 <script>
+// reveal charts
+const charts = document.getElementById('charts');
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{ if(entry.isIntersecting){ charts.classList.add('show'); } })
+},{threshold:0.3});
+observer.observe(charts);
+
+// slider
 let index = 0;
 const slidesContainer = document.getElementById('slides');
+const dots = document.querySelectorAll('#dots .dot');
 const totalSlides = 3;
+
+function updateDots(){
+  dots.forEach((d,i)=> d.classList.toggle('active', i===index));
+}
 
 function renderSlides(){
   slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+  updateDots();
 }
 
 function slide(step){
   index += step;
-
   if(index < 0) index = totalSlides - 1;
   if(index >= totalSlides) index = 0;
-
   renderSlides();
 }
 
