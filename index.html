@@ -72,7 +72,9 @@
     .wave {
       position: absolute;
       bottom: 0;
+      left: 0;
       width: 100%;
+      height: 200px;
       z-index: 2;
       line-height: 0;
     }
@@ -80,12 +82,12 @@
     .wave svg {
       display: block;
       width: 100%;
-      height: 120px;
+      height: 100%;
     }
 
     @media (max-width: 600px) {
-      .title {
-        letter-spacing: 6px;
+      .wave {
+        height: 160px;
       }
     }
   </style>
@@ -100,13 +102,14 @@
       <div class="subtitle">Find Your Perfect Coffee Spot</div>
     </div>
 
-    <!-- wave bawah bertumpuk -->
+    <!-- wave bawah full & bertumpuk -->
     <div class="wave">
-      <svg viewBox="0 0 1440 320">
-        <path fill="#ffffff" fill-opacity="0.7" d="M0,224L48,218.7C96,213,192,203,288,197.3C384,192,480,192,576,208C672,224,768,256,864,256C960,256,1056,224,1152,197.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L0,320Z"></path>
-        <path fill="#ffffff" fill-opacity="0.5" d="M0,256L48,250.7C96,245,192,235,288,224C384,213,480,203,576,213.3C672,224,768,256,864,256C960,256,1056,224,1152,208C1248,192,1344,192,1392,192L1440,192L1440,320L0,320Z"></path>
-        <path fill="#ffffff" fill-opacity="0.3" d="M0,288L60,272C120,256,240,224,360,218.7C480,213,600,235,720,240C840,245,960,235,1080,213.3C1200,192,1320,160,1380,144L1440,128L1440,320L0,320Z"></path>
+      <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+        <path fill="#ffffff" fill-opacity="0.9" d="M0,160L60,165.3C120,171,240,181,360,176C480,171,600,149,720,149.3C840,149,960,171,1080,181.3C1200,192,1320,192,1380,192L1440,192L1440,320L0,320Z"></path>
+        <path fill="#ffffff" fill-opacity="0.6" d="M0,200L60,208C120,216,240,232,360,224C480,216,600,184,720,181.3C840,179,960,203,1080,213.3C1200,224,1320,224,1380,224L1440,224L1440,320L0,320Z"></path>
+        <path fill="#ffffff" fill-opacity="0.4" d="M0,240L60,250.7C120,261,240,283,360,266.7C480,251,600,197,720,186.7C840,176,960,208,1080,224C1200,240,1320,240,1380,240L1440,240L1440,320L0,320Z"></path>
       </svg>
+    </div>
     </div>
 
   </section>
