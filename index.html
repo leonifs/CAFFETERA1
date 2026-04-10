@@ -205,41 +205,7 @@
     </div>
 
   </div>
-  <!-- SPECIAL FOR YOU (langsung tanpa jeda) -->
-  <div class="section-title" style="margin-top:10px">SPECIAL FOR YOU</div>
-
-  <div class="slider">
-    <button class="nav prev" onclick="slide(-1)">&#10094;</button>
-
-    <div class="slides" id="slides">
-      <img src="1.png" class="slide">
-      <img src="2.png" class="slide">
-      <img src="3.png" class="slide">
-    </div>
-
-    <button class="nav next" onclick="slide(1)">&#10095;</button>
-  </div>
-
-  <div class="dots" id="dots">
-    <span class="dot active"></span>
-    <span class="dot"></span>
-    <span class="dot"></span>
-  </div>
-
 </section>
-
-<style>
-.slider{position:relative;width:100%;max-width:900px;overflow:hidden}
-.slides{display:flex;width:300%;transition:transform 1s ease}
-.slide{flex:0 0 100%;width:100%;height:320px;object-fit:contain;background:#f5f5f5;border-radius:20px}
-.nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.4);color:#fff;border:none;font-size:18px;padding:8px 12px;border-radius:50%;cursor:pointer}
-.nav:hover{background:#ff7a18}
-.prev{left:10px}
-.next{right:10px}
-.dots{display:flex;justify-content:center;gap:8px;margin-top:10px}
-.dot{width:8px;height:8px;background:#ccc;border-radius:50%;transition:0.3s}
-.dot.active{width:22px;border-radius:10px;background:#ff7a18}
-</style>
 
 <script>
 const charts = document.getElementById('charts');
@@ -253,20 +219,6 @@ const observer = new IntersectionObserver(entries=>{
 },{threshold:0.3});
 
 observer.observe(charts);
-
-// SLIDER
-let index = 0;
-const slidesContainer = document.getElementById('slides');
-const dots = document.querySelectorAll('#dots .dot');
-const totalSlides = 3;
-
-function updateDots(){dots.forEach((d,i)=>d.classList.toggle('active', i===index));}
-
-function renderSlides(){slidesContainer.style.transform = `translateX(-${index * 100}%)`;updateDots();}
-
-function slide(step){index += step;if(index < 0) index = totalSlides - 1;if(index >= totalSlides) index = 0;renderSlides();}
-
-renderSlides();
 </script>
 
 </body>
