@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COFFETERA</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .hero {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: url('WALLPAPER.png') no-repeat center/cover;
+    }
+
+    /* overlay gradasi transparan */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(255,122,24,0.25), rgba(255,255,255,0.15));
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      padding: 20px;
+    }
+
+    .title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(60px, 12vw, 140px);
+      letter-spacing: 12px;
+      color: transparent;
+      -webkit-text-stroke: 2px #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      margin-top: 20px;
+      font-size: clamp(14px, 3vw, 22px);
+      color: #ffffff;
+      font-weight: 300;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    /* wave effect bawah */
+    .wave {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      z-index: 2;
+      line-height: 0;
+    }
+
+    .wave svg {
+      display: block;
+      width: 100%;
+      height: 120px;
+    }
+
+    @media (max-width: 600px) {
+      .title {
+        letter-spacing: 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="hero">
+    <div class="overlay"></div>
+
+    <div class="content">
+      <div class="title">COFFETERA</div>
+      <div class="subtitle">Find Your Perfect Coffee Spot</div>
+    </div>
+
+    <!-- wave bawah bertumpuk -->
+    <div class="wave">
+      <svg viewBox="0 0 1440 320">
+        <path fill="#ffffff" fill-opacity="0.7" d="M0,224L48,218.7C96,213,192,203,288,197.3C384,192,480,192,576,208C672,224,768,256,864,256C960,256,1056,224,1152,197.3C1248,171,1344,149,1392,138.7L1440,128L1440,320L0,320Z"></path>
+        <path fill="#ffffff" fill-opacity="0.5" d="M0,256L48,250.7C96,245,192,235,288,224C384,213,480,203,576,213.3C672,224,768,256,864,256C960,256,1056,224,1152,208C1248,192,1344,192,1392,192L1440,192L1440,320L0,320Z"></path>
+        <path fill="#ffffff" fill-opacity="0.3" d="M0,288L60,272C120,256,240,224,360,218.7C480,213,600,235,720,240C840,245,960,235,1080,213.3C1200,192,1320,160,1380,144L1440,128L1440,320L0,320Z"></path>
+      </svg>
+    </div>
+
+  </section>
+</body>
+</html>
