@@ -65,7 +65,15 @@
 
     .slider{position:relative;width:100%;overflow:hidden}
     .slides{display:flex;transition:transform 1.2s cubic-bezier(0.25,0.8,0.25,1);width:300%}
-    .slide{flex:0 0 100%;width:100%;height:360px;object-fit:cover;border-radius:22px}
+    .slide{
+      flex:0 0 100%;
+      width:100%;
+      height:320px;
+      object-fit:contain; /* supaya tidak zoom/crop */
+      background:#f3f3f3; /* biar ada space kalau gambar tidak full */
+      border-radius:22px;
+      padding:10px;
+    }
 
     .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.4);color:#fff;border:none;font-size:20px;padding:8px 12px;border-radius:50%;cursor:pointer}
     .nav:hover{background:#ff7a18}
