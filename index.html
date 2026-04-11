@@ -56,7 +56,7 @@
     /* NEXT SECTION */
     .next-section{
   min-height:100vh;
-  background:linear-gradient(to bottom, #ffffff 0%, #fff5eb 40%, #ffd3a8 70%, #ff7a18 100%);
+  background:linear-gradient(to bottom, #ffffff 0%, #fff7f0 40%, #fff1e6 70%, #ffeddc 100%);
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
@@ -143,9 +143,9 @@
 
     .section-title{
       font-family:'Bebas Neue', sans-serif;
-      font-size:clamp(40px,6vw,80px);
+      font-size:clamp(30px,5vw,60px);
       color:#ff7a18;
-      letter-spacing:8px;
+      letter-spacing:6px;
       text-align:center;
     }
 
@@ -154,7 +154,8 @@
     }
   
 /* SLIDER STYLE */
-.special{width:100%;max-width:1200px;margin-top:40px;text-align:center}
+.special{width:100%;max-width:1200px;margin-top:40px;margin-bottom:30px;text-align:center}
+.special .section-title{margin-bottom:40px;}
 .slider{position:relative;overflow:hidden;border-radius:20px}
 .slides{display:flex;transition:0.5s}
 .slide{min-width:100%;display:none;width:100%;height:420px;object-fit:cover;border-radius:20px}
@@ -166,21 +167,18 @@
 .dot{display:inline-block;width:10px;height:10px;background:#ccc;border-radius:50%;margin:0 5px}
 .dot.active{background:#ff7a18}
 
-/* BACKGROUND GRADIENT WAVE */
+/* BACKGROUND GRADIENT WAVE (lebih soft cream) */
 .next-section{
-  background:linear-gradient(to bottom, #ffffff 0%, #fff5eb 40%, #ffd3a8 70%, #ff7a18 100%);
+  background:linear-gradient(
+    to bottom,
+    #ffffff 0%,
+    #fffaf5 40%,
+    #fff4ec 70%,
+    #fdf0e6 100%
+  );
 }
 
-/* CONTACT FOOTER */
-.contact-section{
-  width:100vw;
-  margin:0;
-  padding:40px 20px 50px;
-  border-top:2px solid rgba(255,255,255,0.3);
-  background:#ffb066;
-  position:relative;
-  left:0;
-}
+
 
 .contact-container{
   display:flex;
@@ -236,10 +234,68 @@
   color:#fff;
   opacity:0.9;
 }
+
+
+/* HEADER STYLE */
+.header{
+  position:fixed;
+  top:0;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 30px; /* diperkecil */
+  background:rgba(255,245,235,0.9);
+  backdrop-filter:blur(10px);
+  z-index:1000;
+  transition:0.4s;
+}
+
+.logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;
+  letter-spacing:4px;
+  color:#ff7a18;
+  opacity:0;
+  transition:0.4s;
+}
+
+.nav-menu{
+  display:flex;
+  gap:30px;
+}
+
+.nav-item{
+  text-decoration:none;
+  color:#333;
+  font-size:14px;
+  letter-spacing:2px;
+  transition:0.3s;
+}
+
+.nav-item:hover{
+  color:#ff7a18;
+}
+
+.header.scrolled .logo{
+  opacity:1;
+}
+
 </style>
 </head>
 
 <body>
+
+<!-- HEADER -->
+<header class="header" id="header">
+  <div class="logo" id="logo">COFFETERA</div>
+  <nav class="nav-menu">
+    <a href="#" class="nav-item">HOME</a>
+    <a href="#" class="nav-item">COFFEE MAP</a>
+    <a href="#" class="nav-item">TOP 10</a>
+    <a href="#" class="nav-item">CONTACT</a>
+  </nav>
+</header>
 
 <section class="hero">
   <div class="overlay"></div>
@@ -311,35 +367,7 @@
       <span class="dot"></span>
     </div>
   </div>
-  <!-- CONTACT FOOTER -->
-  <div class="contact-section">
-    <div class="contact-title">CONTACT US!</div>
-
-    <div class="contact-container">
-
-      <div class="person">
-        <img src="Leoni.png" alt="Leoni">
-        <div class="contact-info">
-          Leoni Fransiska<br>
-          Phone: 0812-3456-7890<br>
-          Instagram: @leoni<br>
-          LinkedIn: leoni-fransiska
-        </div>
-      </div>
-
-      <div class="person">
-        <img src="Arina.png" alt="Arina">
-        <div class="contact-info">
-          Arina Septia<br>
-          Phone: 0813-9876-5432<br>
-          Instagram: @arina<br>
-          LinkedIn: arina-septia
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
+  </section>
 
 <script>
 const charts = document.getElementById('charts');
@@ -376,7 +404,44 @@ document.querySelector('.prev').onclick = ()=>{
   showSlide(index);
 }
 
+
+
+// HEADER SCROLL EFFECT
+const header = document.getElementById('header');
+const logo = document.getElementById('logo');
+const hero = document.querySelector('.hero');
+
+window.addEventListener('scroll', ()=>{
+  const title = document.querySelector('.title');
+  const titleBottom = title.getBoundingClientRect().bottom;
+
+  // muncul saat tulisan COFFETERA sudah keluar dari layar
+  if(titleBottom < 0){
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
+
 </script>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © Geomatics Engineering 2026
+  </footer>
+
+<style>
+.footer{
+  width:100%;
+  text-align:center;
+  padding:10px 5px;
+  font-size:11px;
+  color:#ffffff;
+  background:#ffb88c;
+  letter-spacing:2px;
+  margin-top:0; /* hilangkan jarak putih */
+}
+</style>
 
 </body>
 </html>
