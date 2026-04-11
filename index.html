@@ -277,8 +277,118 @@
   color:#ff7a18;
 }
 
+/* DROPDOWN FIX */
+.dropdown{
+  position:relative;
+  padding-bottom:10px; /* hilangkan gap */
+}
+
+.dropdown-menu{
+  position:absolute;
+  top:100%;
+  right:0;
+  background:#fdf6ec;
+  padding:10px 0;
+  display:none;
+  flex-direction:column;
+  min-width:200px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  border-radius:10px;
+  z-index:999;
+}
+
+.dropdown-menu a{
+  padding:10px 15px;
+  text-decoration:none;
+  color:#333;
+  font-size:13px;
+  letter-spacing:1px;
+}
+
+.dropdown-menu a:hover{
+  background:#fff0e6;
+  color:#ff7a18;
+}
+
+.dropdown:hover .dropdown-menu,
+.dropdown-menu:hover{
+  display:flex;
+}
+
 .header.scrolled .logo{
   opacity:1;
+}
+
+/* ===== FINAL PREMIUM TABLE FONT FIX (ALL CONSISTENT) ===== */
+.sheet-table{
+  width:90%;
+  max-width:1100px;
+  margin:30px auto;
+  border-collapse:separate;
+  border-spacing:0;
+  background:#ffffff;
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* PAKSA SEMUA ISI TABEL FONT SAMA */
+.sheet-table th,
+.sheet-table td{
+  font-family:'Playfair Display', serif !important;
+}
+
+.sheet-th{
+  background:#ff7a18;
+  color:#ffffff;
+  padding:14px;
+  font-size:15px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.sheet-td{
+  padding:12px;
+  font-size:14px;
+  letter-spacing:0.5px;
+  color:#333;
+  text-align:center;
+}
+
+.sheet-table tr:nth-child(even) .sheet-td{
+  background:#fff6ef;
+}
+
+.sheet-table tr:hover .sheet-td{
+  background:#ffe5d3;
+  transition:0.2s ease;
+}
+
+.sheet-th{
+  background:#ff7a18;
+  color:#ffffff;
+  padding:14px;
+  font-family:'Playfair Display', serif;
+  font-size:15px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+.sheet-td{
+  padding:12px;
+  font-size:14px;
+  letter-spacing:0.5px;
+  color:#333;
+  text-align:center;
+}
+
+.sheet-table tr:nth-child(even) .sheet-td{
+  background:#fff6ef;
+}
+
+.sheet-table tr:hover .sheet-td{
+  background:#ffe5d3;
+  transition:0.2s ease;
 }
 
 </style>
@@ -292,7 +402,15 @@
   <nav class="nav-menu">
     <a href="#" class="nav-item" id="homeBtn">HOME</a>
     <a href="#" class="nav-item">CO-MAP</a>
-    <a href="#" class="nav-item">TOP 10</a>
+    <div class="dropdown">
+        <a href="#" class="nav-item">TOP 10</a>
+        <div class="dropdown-menu">
+          <a href="#" class="top-link" data-page="AESTHETIC COFFEE">AESTHETIC COFFEE</a>
+          <a href="#" class="top-link" data-page="WORKING COFFEE">WORKING COFFEE</a>
+          <a href="#" class="top-link" data-page="FAMILY COFFEE">FAMILY COFFEE</a>
+          <a href="#" class="top-link" data-page="ROMANTIC COFFEE">ROMANTIC COFFEE</a>
+        </div>
+      </div>
   </nav>
 </header>
 
@@ -555,6 +673,192 @@ homeBtn.addEventListener('click', (e)=>{
   contact.style.display = 'none';
   window.scrollTo({top:0, behavior:'smooth'});
 });
+</script>
+
+<script>
+// NAVIGASI DROPDOWN → PAGE 2 (AMAN, TANPA MERUSAK SCRIPT LAIN)
+document.querySelectorAll('.top-link').forEach(link=>{
+  link.addEventListener('click', function(e){
+    e.preventDefault();
+
+    const title = this.getAttribute('data-page');
+
+    const hero = document.querySelector('.hero');
+    const next = document.querySelector('.next-section');
+
+    if(hero) hero.style.display = 'none';
+    if(next) next.style.display = 'none';
+
+    let page = document.getElementById('page2');
+
+    if(!page){
+      page = document.createElement('div');
+      page.id = 'page2';
+      document.body.appendChild(page);
+    }
+
+    page.innerHTML = `
+      <div style="
+        margin-top:30px;
+        display:flex;
+        justify-content:flex-start;
+        align-items:center;
+        flex-direction:column;
+        font-family:'Montserrat', sans-serif;
+        padding-top:20px;
+      ">
+        <h1 style="font-size:30px;letter-spacing:4px;color:#ff7a18;">${title}</h1>
+        <p style="font-family:'Playfair Display', serif; letter-spacing:2px;">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+      </div>
+    `;
+  });
+});
+
+// HOME → BALIK KE HALAMAN AWAL
+const homeFix = document.getElementById('homeBtn');
+homeFix.addEventListener('click', function(e){
+  e.preventDefault();
+
+  const hero = document.querySelector('.hero');
+  const next = document.querySelector('.next-section');
+  const page = document.getElementById('page2');
+
+  if(hero) hero.style.display = 'flex';
+  if(next) next.style.display = 'flex';
+  if(page) page.remove();
+
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+</script>
+<script>
+// ================= PAGE 2 + GOOGLE SHEETS (FINAL NO BUG) =================
+const SHEET_AESTHETIC = "https://docs.google.com/spreadsheets/d/1Vl4rKuLOcf0oBeq7DN8goLGQ7pr3tDQ-G-dS83w350Y/gviz/tq?tqx=out:json";
+const SHEET_WORKING = "https://docs.google.com/spreadsheets/d/1_bsHnKdgx6Uk5w93QFU_Q4Q8rMNeyH7BkfnWPMzs2Zo/gviz/tq?tqx=out:json";
+const SHEET_FAMILY = "https://docs.google.com/spreadsheets/d/1gHC4rHIhyUCC5O0O-A9sMCGFh9GBn0_jLPwpfToi-r8/gviz/tq?tqx=out:json";
+const SHEET_ROMANTIC = "https://docs.google.com/spreadsheets/d/1GgEqoymTJ__hlOcIbR5grgSjZ7tKGQP2MJvTuxuDGWU/gviz/tq?tqx=out:json";
+
+async function loadSheet(url){
+  try{
+    const res = await fetch(url);
+    const txt = await res.text();
+    const json = JSON.parse(txt.substring(47).slice(0,-2));
+
+    const cols = json.table.cols;
+    const rows = json.table.rows;
+
+    let html = `<table class="sheet-table">`;
+
+    // HEADER
+    html += "<tr>";
+    cols.slice(0,5).forEach(c=>{
+      html += `<th class="sheet-th">${c.label}</th>`;
+    });
+    html += "</tr>";
+
+    // DATA
+    rows.forEach(r=>{
+      html += "<tr>";
+      r.c.slice(0,5).forEach(cell=>{
+        html += `<td class="sheet-td">${cell ? cell.v : ''}</td>`;
+      });
+      html += "</tr>";
+    });
+
+    html += "</table>";
+
+    document.getElementById('sheetTable').innerHTML = html;
+
+  }catch(err){
+    document.getElementById('sheetTable').innerHTML = "GAGAL LOAD DATA";
+    console.error(err);
+  }
+}
+
+// SINGLE NAVIGATION HANDLER (ANTI BUG)
+document.querySelectorAll('.top-link').forEach(link=>{
+  link.onclick = function(e){
+    e.preventDefault();
+
+    const title = this.dataset.page;
+
+    document.querySelector('.hero').style.display='none';
+    document.querySelector('.next-section').style.display='none';
+
+    let page = document.getElementById('page2');
+    if(!page){
+      page = document.createElement('div');
+      page.id = 'page2';
+      document.body.appendChild(page);
+    }
+
+    // AESTHETIC
+    if(title === "AESTHETIC COFFEE"){
+      page.innerHTML = `
+        <div style="margin-top:40px;text-align:center">
+          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
+          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <div id="sheetTable">Loading data...</div>
+        </div>
+      `;
+      loadSheet(SHEET_AESTHETIC);
+    }
+
+    // WORKING (FIXED)
+    else if(title === "WORKING COFFEE"){
+      page.innerHTML = `
+        <div style="margin-top:40px;text-align:center">
+          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
+          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <div id="sheetTable">Loading data...</div>
+        </div>
+      `;
+      loadSheet(SHEET_WORKING);
+    }
+
+    // FAMILY (NEW FIX NO BUG)
+    else if(title === "FAMILY COFFEE"){
+      page.innerHTML = `
+        <div style="margin-top:40px;text-align:center">
+          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
+          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <div id="sheetTable">Loading data...</div>
+        </div>
+      `;
+      loadSheet(SHEET_FAMILY);
+    }
+    // ROMANTIC (FINAL FIX NO BUG)
+    else if(title === "ROMANTIC COFFEE"){
+      page.innerHTML = `
+        <div style="margin-top:40px;text-align:center">
+          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
+          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <div id="sheetTable">Loading data...</div>
+        </div>
+      `;
+      loadSheet(SHEET_ROMANTIC);
+    }
+
+    // OTHER
+    else{
+      page.innerHTML = `
+        <div style="margin-top:40px;text-align:center">
+          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
+          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+        </div>
+      `;
+    }
+  }
+});
+
+// HOME FIX (CLEAN)
+document.getElementById('homeBtn').onclick = function(e){
+  e.preventDefault();
+  document.querySelector('.hero').style.display='flex';
+  document.querySelector('.next-section').style.display='flex';
+  const page = document.getElementById('page2');
+  if(page) page.remove();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 </script>
 
 </body>
