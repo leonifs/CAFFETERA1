@@ -389,6 +389,13 @@
   transition:0.2s ease;
 }
 
+
+
+/* FIX ZOOM CONTROL POSITION (TIDAK KETUTUP HEADER) */
+.leaflet-top.leaflet-left{
+  top:80px !important; /* turun dari header */
+}
+
 </style>
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -523,6 +530,41 @@ document.querySelector('.prev').onclick = ()=>{
 }
 
 
+
+// ================= GLOBAL INSIGHT (INTEGRATED FROM FIRST LOAD - NO BUG) =================
+function renderInsightAwal(){
+  const aesthetic = 3;
+  const working = 4;
+  const family = 7;
+  const romantic = 10;
+
+  const total = aesthetic + working + family + romantic;
+
+  const a = Math.round((aesthetic/total)*100);
+  const w = Math.round((working/total)*100);
+  const f = Math.round((family/total)*100);
+  const r = Math.round((romantic/total)*100);
+
+  const values = document.querySelectorAll('.value');
+
+  if(values.length === 4){
+    values[0].innerText = a + '%';
+    values[1].innerText = w + '%';
+    values[2].innerText = f + '%';
+    values[3].innerText = r + '%';
+
+    document.querySelector('.aesthetic').style.background = `conic-gradient(#ff7a18 0% ${a}%, #eee ${a}%)`;
+    document.querySelector('.cowork').style.background = `conic-gradient(#ff7a18 0% ${w}%, #eee ${w}%)`;
+    document.querySelector('.family').style.background = `conic-gradient(#ff7a18 0% ${f}%, #eee ${f}%)`;
+    document.querySelector('.romantic').style.background = `conic-gradient(#ff7a18 0% ${r}%, #eee ${r}%)`;
+  }
+}
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', renderInsightAwal);
+}else{
+  renderInsightAwal();
+}
 
 // HEADER FIXED - LOGO SELALU MUNCUL (SCROLL EFFECT DIHAPUS)
 
@@ -955,6 +997,9 @@ mapBtn.addEventListener('click', function(e){
       {lat:-7.766,lng:110.366,name:'Romantic Coffee 9'},
       {lat:-7.774,lng:110.384,name:'Romantic Coffee 10'}
     ];
+
+    // ===== HAPUS KETERGANTUNGAN MAP (INSIGHT TIDAK BOLEH DI SINI) =====
+// (sengaja dikosongkan agar tidak override insight awal)
 
     function addMarkers(data, layer, color){
       data.forEach(item=>{
