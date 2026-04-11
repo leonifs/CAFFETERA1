@@ -290,7 +290,7 @@
 <header class="header" id="header">
   <div class="logo" id="logo">COFFETERA</div>
   <nav class="nav-menu">
-    <a href="#" class="nav-item">HOME</a>
+    <a href="#" class="nav-item" id="homeBtn">HOME</a>
     <a href="#" class="nav-item">CO-MAP</a>
     <a href="#" class="nav-item">TOP 10</a>
   </nav>
@@ -545,6 +545,15 @@ footer.addEventListener('click', ()=>{
   const contact = document.getElementById('contactSection');
   contact.style.display = 'block';
   contact.scrollIntoView({behavior:'smooth'});
+});
+
+// HOME CLICK → SEMBUNYIKAN CONTACT
+const homeBtn = document.getElementById('homeBtn');
+homeBtn.addEventListener('click', (e)=>{
+  e.preventDefault();
+  const contact = document.getElementById('contactSection');
+  contact.style.display = 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
 });
 </script>
 
