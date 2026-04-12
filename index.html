@@ -834,7 +834,7 @@ if(document.readyState === 'loading'){
 
 /* CONTACT FORM STYLE */
 .contact-form{
-  width:420px;
+  width:520px; /* DIPERLEBAR */
   background:transparent;
   display:flex;
   flex-direction:column;
@@ -860,6 +860,7 @@ if(document.readyState === 'loading'){
 
 .contact-form input,
 .contact-form textarea{
+  width:100%; /* PANJANG KE KANAN */
   padding:12px;
   border:none;
   border-bottom:2px solid #fff;
@@ -877,6 +878,10 @@ if(document.readyState === 'loading'){
 .contact-form .row{
   display:flex;
   gap:10px;
+}
+
+.contact-form .row div{
+  flex:1; /* BIAR FULL MEMANJANG */
 }
 
 .contact-form button{
