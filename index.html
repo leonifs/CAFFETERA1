@@ -319,15 +319,15 @@
 
 /* ===== FINAL PREMIUM TABLE FONT FIX (ALL CONSISTENT) ===== */
 .sheet-table{
-  width:90%;
-  max-width:1100px;
-  margin:30px auto;
+  width:80%;
+  max-width:850px;
+  margin:20px auto;
   border-collapse:separate;
   border-spacing:0;
   background:#ffffff;
-  border-radius:14px;
+  border-radius:12px;
   overflow:hidden;
-  box-shadow:0 12px 30px rgba(0,0,0,0.08);
+  box-shadow:0 8px 20px rgba(0,0,0,0.08);
 }
 
 /* PAKSA SEMUA ISI TABEL FONT SAMA */
@@ -339,16 +339,17 @@
 .sheet-th{
   background:#ff7a18;
   color:#ffffff;
-  padding:14px;
-  font-size:15px;
-  letter-spacing:1.5px;
+  padding:10px;
+  font-family:'Playfair Display', serif;
+  font-size:13px;
+  letter-spacing:1px;
   text-transform:uppercase;
 }
 
 .sheet-td{
-  padding:12px;
-  font-size:14px;
-  letter-spacing:0.5px;
+  padding:8px;
+  font-size:12px;
+  letter-spacing:0.3px;
   color:#333;
   text-align:center;
 }
@@ -965,7 +966,8 @@ mapBtn.addEventListener('click', function(e){
     const aesthetic = [
       {lat:-7.770,lng:110.370,name:'Aesthetic Coffee 1', img:'1.png'},
       {lat:-7.766,lng:110.365,name:'Aesthetic Coffee 2', img:'2.png'},
-      {lat:-7.772,lng:110.385,name:'Aesthetic Coffee 3', img:'3.png'}
+      {lat:-7.772,lng:110.385,name:'Aesthetic Coffee 3', img:'3.png'},
+      {lat:-7.768,lng:110.378,name:'Aesthetic Coffee 4', img:'4.png'}
     ];
 
     const working = [
@@ -1109,7 +1111,7 @@ window.goToDetail = async function(name){
 
   // loading state dulu
   modal.innerHTML = `
-    <div style="background:#fff;width:90%;max-width:600px;border-radius:16px;padding:25px;text-align:center;font-family:'Montserrat',sans-serif;box-shadow:0 20px 50px rgba(0,0,0,0.3);position:relative;">
+    <div style="background:#fff;width:75%;max-width:500px;border-radius:14px;padding:18px;text-align:center;font-family:'Montserrat',sans-serif;box-shadow:0 15px 35px rgba(0,0,0,0.25);position:relative;">
       <span onclick="closeModal()" style="position:absolute;top:10px;right:15px;font-size:18px;cursor:pointer">✕</span>
       <h2 style="font-family:'Bebas Neue';letter-spacing:3px;color:#ff7a18">${name}</h2>
       <p>Loading data...</p>
@@ -1120,7 +1122,7 @@ window.goToDetail = async function(name){
   const tableHTML = await loadDetailSheetByName(name);
 
   modal.innerHTML = `
-    <div style="background:#fff;width:90%;max-width:600px;border-radius:16px;padding:25px;text-align:center;font-family:'Montserrat',sans-serif;box-shadow:0 20px 50px rgba(0,0,0,0.3);position:relative;overflow:auto;max-height:90vh">
+    <div style="background:#fff;width:75%;max-width:500px;border-radius:14px;padding:18px;text-align:center;font-family:'Montserrat',sans-serif;box-shadow:0 15px 35px rgba(0,0,0,0.25);position:relative;overflow:auto;max-height:85vh">
       <span onclick="closeModal()" style="position:absolute;top:10px;right:15px;font-size:18px;cursor:pointer">✕</span>
 
       <h2 style="font-family:'Bebas Neue';letter-spacing:3px;color:#ff7a18;margin-bottom:10px">${name}</h2>
