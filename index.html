@@ -591,97 +591,120 @@ if(document.readyState === 'loading'){
 
 
 
-<!-- CONTACT SECTION (HIDDEN AWAL) -->
+<!-- CONTACT SECTION (REDESIGN SESUAI GAMBAR) -->
 <section class="contact-section" id="contactSection">
-  <div class="contact-title-main">CONTACT US</div>
 
-  <div class="contact-wrap">
+  <div class="contact-header">
+    <span>MEET</span>
+    <span>OUR</span>
+    <span>TEAM</span>
+  </div>
 
-    <div class="contact-card">
-      <div class="photo-wrap">
-        <img src="Leoni.png">
-      </div>
-      <div class="identity">
-        <h3>Leoni</h3>
-        <p>Instagram: @dummy</p>
-        <p>LinkedIn: dummy</p>
-      </div>
+  <div class="contact-main">
+
+    <!-- LEFT IMAGE -->
+    <div class="contact-img left">
+      <img src="Leoni.png">
     </div>
 
-    <div class="contact-card">
-      <div class="photo-wrap">
-        <img src="Arina.png">
+    <!-- CARD WRAPPER -->
+    <div class="contact-cards">
+
+      <!-- LEONI CARD -->
+      <div class="contact-card-new">
+        <div class="card-title">WEB DEVELOPMENT</div>
+        <div class="card-body">
+          <p>👤 LEONI FRANSISKA</p>
+          <p>✉️ LEONIFS248@GMAIL.COM</p>
+          <p>📷 LEONIFS_</p>
+          <p>💼 Leoni Fransiska</p>
+          <p>🏫 TEKNIK GEOMATIKA, UPNVY</p>
+        </div>
       </div>
-      <div class="identity">
-        <h3>Arina</h3>
-        <p>Instagram: @dummy</p>
-        <p>LinkedIn: dummy</p>
+
+      <!-- ARINA CARD -->
+      <div class="contact-card-new">
+        <div class="card-title">DATA ANALYST</div>
+        <div class="card-body">
+          <p>👤 ARINA SEPTIA ANDIA</p>
+          <p>✉️ ARINARINASEPTIA@GMAIL.COM</p>
+          <p>📷 ARINSEPTIAAN_</p>
+          <p>💼 Arina Septia</p>
+          <p>🏫 TEKNIK GEOMATIKA, UPNVY</p>
+        </div>
       </div>
+
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="contact-img right">
+      <img src="Arina.png">
     </div>
 
   </div>
+
 </section>
 
 <style>
 .contact-section{
-  display:none; /* hanya muncul saat klik */
-  background:#ffb88c;
-  padding:80px 20px 60px;
-  text-align:center;
+  display:none;
+  background:#f4b35e;
+  padding:60px 20px;
 }
 
-.contact-title-main{
-  font-family:'Playfair Display', serif; /* sama kayak slogan aesthetic */
-  font-size:48px;
-  color:#ffffff;
-  margin-bottom:60px;
-}
-
-.contact-wrap{
+.contact-header{
   display:flex;
+  justify-content:space-between;
+  font-family:'Montserrat', sans-serif;
+  letter-spacing:4px;
+  font-size:20px;
+  margin-bottom:40px;
+}
+
+.contact-main{
+  display:flex;
+  align-items:center;
   justify-content:center;
-  gap:100px;
+  gap:40px;
   flex-wrap:wrap;
 }
 
-.contact-card{
-  position:relative;
-  width:240px;
-  padding-top:70px;
-}
-
-.photo-wrap{
-  position:absolute;
-  top:0;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:2;
-}
-
-.photo-wrap img{
-  width:130px;
-  height:130px;
-  border-radius:50%;
+.contact-img img{
+  width:260px;
+  height:380px;
   object-fit:cover;
-  border:5px solid #fff;
 }
 
-.identity{
-  background:#ffffff;
-  padding:90px 20px 25px;
-  border-radius:18px;
-  color:#ff7a18;
-  font-family:'Playfair Display', serif;
+.contact-cards{
+  display:flex;
+  gap:20px;
 }
 
-.identity h3{
+.contact-card-new{
+  width:300px;
+  background:#ddd;
+  box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+.card-title{
+  background:#ff7a18;
+  color:#fff;
+  padding:15px;
+  font-family:'Montserrat', sans-serif;
+  letter-spacing:2px;
   font-size:18px;
-  margin-bottom:10px;
 }
 
-.identity p{
+.card-body{
+  padding:20px;
   font-size:13px;
-  margin:4px 0;
+  font-family:'Montserrat', sans-serif;
+  line-height:2;
+}
+
+@media(max-width:900px){
+  .contact-main{flex-direction:column}
+  .contact-cards{flex-direction:column}
 }
 </style>
 
