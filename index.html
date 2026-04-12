@@ -1360,19 +1360,12 @@ window.closeModal = function(){
 });
 // WHATSAPP INTEGRATION (NO BUG)
 function sendWhatsApp(){
-  const message = document.getElementById('message').value || '';
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const linkedin = document.getElementById('linkedin').value;
+  const message = document.getElementById('message').value;
 
-  if(message.trim() === ''){
-    alert('Message tidak boleh kosong!');
-    return;
-  }
-
-  const url = "https://wa.me/628979390425?text=" + encodeURIComponent(message);
-
-  window.location.href = url;
-}
-Email: ${email}
-LinkedIn: ${linkedin}
+  const text = `
 Message: ${message}`;
   const url = "https://wa.me/628979390425?text=" + encodeURIComponent(text);
 
