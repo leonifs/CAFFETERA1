@@ -608,41 +608,60 @@ if(document.readyState === 'loading'){
 
   <div class="contact-main">
 
-    <!-- LEFT IMAGE -->
-    <div class="contact-img left">
-      <img src="Leoni.png">
-    </div>
+    <!-- PERSON 1 (LEONI) -->
+    <div class="person-row">
+      <div class="contact-img">
+        <img src="Leoni.png">
+      </div>
 
-    <!-- CARD WRAPPER -->
-    <div class="contact-cards">
-
-      <!-- FORM CONTACT (KANAN FOTO LEONI) -->
       <div class="contact-form">
         <h2 class="form-title">WEBGIS DEVELOPMENT</h2>
 
         <label class="field-label">Name</label>
-        <input type="text" id="name" value="Leoni Fransiska" readonly>
+        <input type="text" value="Leoni Fransiska" readonly>
+
         <div class="row">
           <div style="flex:1">
             <label class="field-label">Email</label>
-            <input type="email" id="email" value="leonifs248@gmail.com" readonly>
+            <input type="email" value="leonifs248@gmail.com" readonly>
           </div>
           <div style="flex:1">
             <label class="field-label">LinkedIn</label>
-            <input type="text" id="linkedin" value="Leoni Fransiska" readonly>
+            <input type="text" value="Leoni Fransiska" readonly>
           </div>
         </div>
 
         <textarea id="message" placeholder="Hi..."></textarea>
-
         <button onclick="sendWhatsApp()">KIRIM</button>
       </div>
-
     </div>
 
-    <!-- RIGHT IMAGE -->
-    <div class="contact-img right">
-      
+    <!-- PERSON 2 (ARINA) -->
+    <div class="person-row">
+      <div class="contact-img">
+        <img src="Arina.png">
+      </div>
+
+      <div class="contact-form">
+        <h2 class="form-title">DATA ANALYST</h2>
+
+        <label class="field-label">Name</label>
+        <input type="text" value="Arina Septia Andria" readonly>
+
+        <div class="row">
+          <div style="flex:1">
+            <label class="field-label">Email</label>
+            <input type="email" value="arinarinaseptia@gmail.com" readonly>
+          </div>
+          <div style="flex:1">
+            <label class="field-label">LinkedIn</label>
+            <input type="text" value="Arina Septia" readonly>
+          </div>
+        </div>
+
+        <textarea id="message2" placeholder="Hi..."></textarea>
+        <button onclick="sendWhatsAppArina()">KIRIM</button>
+      </div>
     </div>
 
   </div>
@@ -744,12 +763,17 @@ if(document.readyState === 'loading'){
 
 .contact-main{
   display:flex;
+  flex-direction:column;
+  gap:60px;
   align-items:center;
-  justify-content:center;
+}
+
+.person-row{
+  display:flex;
+  align-items:center;
   gap:40px;
   flex-wrap:wrap;
-  position:relative;
-  z-index:2; /* FOTO PALING ATAS */
+  justify-content:center;
 }
 
 .contact-img img{
@@ -870,6 +894,8 @@ if(document.readyState === 'loading'){
 }
   .contact-cards{flex-direction:column}
 }
+
+
 </style>
 
 <script>
@@ -1358,15 +1384,31 @@ window.closeModal = function(){
 
   }, 300);
 });
-// WHATSAPP INTEGRATION (NO BUG)
+// WHATSAPP INTEGRATION (FINAL SESUAI PERMINTAAN)
 function sendWhatsApp(){
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const linkedin = document.getElementById('linkedin').value;
   const message = document.getElementById('message').value;
 
-  const text = `Message: ${message}`;
+  if(message.trim() === ''){
+    alert('Message tidak boleh kosong!');
+    return;
+  }
+
+  const text = message;
   const url = "https://wa.me/628979390425?text=" + encodeURIComponent(text);
+
+  window.open(url, '_blank');
+}
+
+function sendWhatsAppArina(){
+  const message = document.getElementById('message2').value;
+
+  if(message.trim() === ''){
+    alert('Message tidak boleh kosong!');
+    return;
+  }
+
+  const text = message;
+  const url = "https://wa.me/6285559476308?text=" + encodeURIComponent(text);
 
   window.open(url, '_blank');
 }
