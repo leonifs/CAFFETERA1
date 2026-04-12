@@ -963,39 +963,39 @@ mapBtn.addEventListener('click', function(e){
 
     // ===== DATA (PERSEBARAN MERATA & REALISTIS) =====
     const aesthetic = [
-      {lat:-7.770,lng:110.370,name:'Aesthetic Coffee 1'},
-      {lat:-7.766,lng:110.365,name:'Aesthetic Coffee 2'},
-      {lat:-7.772,lng:110.385,name:'Aesthetic Coffee 3'}
+      {lat:-7.770,lng:110.370,name:'Aesthetic Coffee 1', img:'1.png'},
+      {lat:-7.766,lng:110.365,name:'Aesthetic Coffee 2', img:'2.png'},
+      {lat:-7.772,lng:110.385,name:'Aesthetic Coffee 3', img:'3.png'}
     ];
 
     const working = [
-      {lat:-7.769,lng:110.372,name:'Working Coffee 1'},
-      {lat:-7.775,lng:110.388,name:'Working Coffee 2'},
-      {lat:-7.763,lng:110.360,name:'Working Coffee 3'},
-      {lat:-7.771,lng:110.378,name:'Working Coffee 4'}
+      {lat:-7.769,lng:110.372,name:'Working Coffee 1', img:'1.png'},
+      {lat:-7.775,lng:110.388,name:'Working Coffee 2', img:'2.png'},
+      {lat:-7.763,lng:110.360,name:'Working Coffee 3', img:'3.png'},
+      {lat:-7.771,lng:110.378,name:'Working Coffee 4', img:'4.png'}
     ];
 
     const family = [
-      {lat:-7.768,lng:110.374,name:'Family Coffee 1'},
-      {lat:-7.776,lng:110.390,name:'Family Coffee 2'},
-      {lat:-7.764,lng:110.362,name:'Family Coffee 3'},
-      {lat:-7.773,lng:110.382,name:'Family Coffee 4'},
-      {lat:-7.767,lng:110.368,name:'Family Coffee 5'},
-      {lat:-7.774,lng:110.386,name:'Family Coffee 6'},
-      {lat:-7.762,lng:110.358,name:'Family Coffee 7'}
+      {lat:-7.768,lng:110.374,name:'Family Coffee 1', img:'1.png'},
+      {lat:-7.776,lng:110.390,name:'Family Coffee 2', img:'2.png'},
+      {lat:-7.764,lng:110.362,name:'Family Coffee 3', img:'3.png'},
+      {lat:-7.773,lng:110.382,name:'Family Coffee 4', img:'4.png'},
+      {lat:-7.767,lng:110.368,name:'Family Coffee 5', img:'5.png'},
+      {lat:-7.774,lng:110.386,name:'Family Coffee 6', img:'6.png'},
+      {lat:-7.762,lng:110.358,name:'Family Coffee 7', img:'7.png'}
     ];
 
     const romantic = [
-      {lat:-7.771,lng:110.376,name:'Romantic Coffee 1'},
-      {lat:-7.777,lng:110.392,name:'Romantic Coffee 2'},
-      {lat:-7.765,lng:110.364,name:'Romantic Coffee 3'},
-      {lat:-7.772,lng:110.380,name:'Romantic Coffee 4'},
-      {lat:-7.768,lng:110.369,name:'Romantic Coffee 5'},
-      {lat:-7.775,lng:110.387,name:'Romantic Coffee 6'},
-      {lat:-7.763,lng:110.361,name:'Romantic Coffee 7'},
-      {lat:-7.770,lng:110.373,name:'Romantic Coffee 8'},
-      {lat:-7.766,lng:110.366,name:'Romantic Coffee 9'},
-      {lat:-7.774,lng:110.384,name:'Romantic Coffee 10'}
+      {lat:-7.771,lng:110.376,name:'Romantic Coffee 1', img:'1.png'},
+      {lat:-7.777,lng:110.392,name:'Romantic Coffee 2', img:'2.png'},
+      {lat:-7.765,lng:110.364,name:'Romantic Coffee 3', img:'3.png'},
+      {lat:-7.772,lng:110.380,name:'Romantic Coffee 4', img:'4.png'},
+      {lat:-7.768,lng:110.369,name:'Romantic Coffee 5', img:'5.png'},
+      {lat:-7.775,lng:110.387,name:'Romantic Coffee 6', img:'6.png'},
+      {lat:-7.763,lng:110.361,name:'Romantic Coffee 7', img:'7.png'},
+      {lat:-7.770,lng:110.373,name:'Romantic Coffee 8', img:'8.png'},
+      {lat:-7.766,lng:110.366,name:'Romantic Coffee 9', img:'9.png'},
+      {lat:-7.774,lng:110.384,name:'Romantic Coffee 10', img:'10.png'}
     ];
 
     // ===== HAPUS KETERGANTUNGAN MAP (INSIGHT TIDAK BOLEH DI SINI) =====
@@ -1003,16 +1003,141 @@ mapBtn.addEventListener('click', function(e){
 
     function addMarkers(data, layer, color){
       data.forEach(item=>{
+        const imgSrc = item.img || '1.png';
+        const safeName = String(item.name).replace(/'/g, "\'");
+
         L.marker([item.lat,item.lng], {icon:icon(color)})
         .bindPopup(`
-          <div style="text-align:center;font-family:Montserrat">
-            <b>${item.name}</b><br>
-            <img src="1.png" style="width:120px;height:80px;object-fit:cover;margin-top:6px;border-radius:6px">
+          <div style="text-align:center;font-family:'Montserrat',sans-serif">
+            <div style="font-family:'Playfair Display', serif;font-size:18px;letter-spacing:1px;color:#ff7a18;margin-bottom:4px">
+              ${item.name}
+            </div><br>
+            <img src="${imgSrc}" style="width:120px;height:80px;object-fit:cover;margin-top:6px;border-radius:6px"><br>
+            <span onclick="goToDetail('${safeName}')" style="display:inline-block;margin-top:8px;color:#ff7a18;cursor:pointer;font-size:13px;text-decoration:underline">
+              View More
+            </span>
           </div>
         `)
         .addTo(layer);
       });
     }
+
+    // ================= GOOGLE SHEET DETAIL (ROBUST PARSER) =================
+const DETAIL_BASE = "https://docs.google.com/spreadsheets/d/1trw5vm3xkZeZ3HSUVBBdldohcElzXLRk31eYiiGjixw/gviz/tq?tqx=out:json";
+
+async function loadDetailSheetByName(sheetName){
+  try{
+    const url = DETAIL_BASE + "&sheet=" + encodeURIComponent(sheetName);
+    const res = await fetch(url);
+    const txt = await res.text();
+
+    // robust clean (handle gviz wrapper)
+    const start = txt.indexOf('{');
+    const end = txt.lastIndexOf('}');
+    const json = JSON.parse(txt.substring(start, end+1));
+
+    const cols = json.table.cols || [];
+    const rows = json.table.rows || [];
+
+    if(rows.length === 0){
+      return "<div style='padding:20px'>DATA KOSONG</div>";
+    }
+
+    let html = `<table class=\"sheet-table\">`;
+
+    // HEADER FIX (SAMA UNTUK SEMUA)
+    html += "<tr>";
+    html += `<th class=\"sheet-th\">DATA</th>`;
+    html += `<th class=\"sheet-th\">KETERANGAN</th>`;
+    html += "</tr>";
+
+    // NORMALISASI TOTAL (ANTI BUG TERMASUK AESTHETIC 3)
+    rows.forEach(r=>{
+      const raw = (r.c || []).map(cell => cell && cell.v !== null ? String(cell.v).trim() : '');
+
+      // ambil hanya yang ada isi
+      const cells = raw.filter(v => v !== '');
+
+      if(cells.length === 0) return;
+
+      let left = cells[0];
+      let right = '';
+
+      // gabungkan semua sisa ke kanan (fix Aesthetic 3 pecah baris)
+      if(cells.length > 1){
+        right = cells.slice(1).join(' ');
+      }else{
+        right = '-';
+      }
+
+      html += "<tr>";
+      html += `<td class=\"sheet-td\">${left}</td>`;
+      html += `<td class=\"sheet-td\">${right}</td>`;
+      html += "</tr>";
+    });
+
+    html += "</table>";
+
+    return html;
+
+  }catch(err){
+    console.error("DETAIL LOAD ERROR:", err);
+    return "<div style='padding:20px;color:red'>GAGAL LOAD DATA (CEK NAMA SHEET HARUS SAMA PERSIS)</div>";
+  }
+}
+
+// POPUP MODAL DETAIL (INTEGRATED WITH GOOGLE SHEET)
+window.goToDetail = async function(name){
+  let modal = document.getElementById('detailModal');
+
+  if(!modal){
+    modal = document.createElement('div');
+    modal.id = 'detailModal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.background = 'rgba(0,0,0,0.5)';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+    modal.style.zIndex = '2000';
+
+    document.body.appendChild(modal);
+  }
+
+  // loading state dulu
+  modal.innerHTML = `
+    <div style="background:#fff;width:90%;max-width:600px;border-radius:16px;padding:25px;text-align:center;font-family:'Montserrat',sans-serif;box-shadow:0 20px 50px rgba(0,0,0,0.3);position:relative;">
+      <span onclick="closeModal()" style="position:absolute;top:10px;right:15px;font-size:18px;cursor:pointer">✕</span>
+      <h2 style="font-family:'Bebas Neue';letter-spacing:3px;color:#ff7a18">${name}</h2>
+      <p>Loading data...</p>
+    </div>
+  `;
+
+  // LOAD SHEET SESUAI NAMA COFFEE SHOP (HARUS MATCH SAMA NAMA SHEET)
+  const tableHTML = await loadDetailSheetByName(name);
+
+  modal.innerHTML = `
+    <div style="background:#fff;width:90%;max-width:600px;border-radius:16px;padding:25px;text-align:center;font-family:'Montserrat',sans-serif;box-shadow:0 20px 50px rgba(0,0,0,0.3);position:relative;overflow:auto;max-height:90vh">
+      <span onclick="closeModal()" style="position:absolute;top:10px;right:15px;font-size:18px;cursor:pointer">✕</span>
+
+      <h2 style="font-family:'Bebas Neue';letter-spacing:3px;color:#ff7a18;margin-bottom:10px">${name}</h2>
+      <p style="font-family:'Playfair Display',serif;letter-spacing:1px;font-size:14px">DETAIL INFORMATION</p>
+
+      <div style="margin-top:15px">
+        ${tableHTML}
+      </div>
+    </div>
+  `;
+}
+
+// CLOSE MODAL
+window.closeModal = function(){
+  const modal = document.getElementById('detailModal');
+  if(modal) modal.remove();
+}
 
     addMarkers(aesthetic, aestheticLayer, 'red');
     addMarkers(working, workingLayer, 'orange');
@@ -1047,4 +1172,3 @@ mapBtn.addEventListener('click', function(e){
 </script>
 </body>
 </html>
-
