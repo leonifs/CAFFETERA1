@@ -651,6 +651,20 @@ if(document.readyState === 'loading'){
   background:#f4b35e;
   padding:60px 20px;
   font-family:'Playfair Display', serif;
+  position:relative;
+}
+
+/* GARIS TEPI TIPIS (PUTIH & SEDIKIT MELENGKUNG) */
+.contact-section::before{
+  content:'';
+  position:absolute;
+  top:20px;
+  left:20px;
+  right:20px;
+  bottom:20px;
+  border:1px solid rgba(255,255,255,0.9);
+  border-radius:20px; /* sedikit melengkung */
+  pointer-events:none;
 }
 
 .contact-header{
