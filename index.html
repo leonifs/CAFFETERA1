@@ -534,7 +534,7 @@ document.querySelector('.prev').onclick = ()=>{
 
 // ================= GLOBAL INSIGHT (INTEGRATED FROM FIRST LOAD - NO BUG) =================
 function renderInsightAwal(){
-  const aesthetic = 3;
+  const aesthetic = 4;
   const working = 4;
   const family = 7;
   const romantic = 10;
@@ -585,7 +585,13 @@ if(document.readyState === 'loading'){
   color:#ffffff;
   background:#ffb88c;
   letter-spacing:2px;
-  margin-top:0; /* hilangkan jarak putih */
+  margin-top:0;
+  cursor:pointer; /* pointer */
+  transition:0.3s ease;
+}
+
+.footer:hover{
+  color:#ff7a18; /* HANYA TEKS BERUBAH */
 }
 </style>
 
@@ -614,11 +620,11 @@ if(document.readyState === 'loading'){
       <div class="contact-card-new">
         <div class="card-title">WEB DEVELOPMENT</div>
         <div class="card-body">
-          <p>👤 LEONI FRANSISKA</p>
-          <p>✉️ LEONIFS248@GMAIL.COM</p>
-          <p>📷 LEONIFS_</p>
+          <p>👤 Leoni Fransiska</p>
+          <p>✉️ leonif248@gmail.com</p>
+          <p>📷 leonifs_</p>
           <p>💼 Leoni Fransiska</p>
-          <p>🏫 TEKNIK GEOMATIKA, UPNVY</p>
+          <p>🏫 Teknik Geomatika, UPNVY</p>
         </div>
       </div>
 
@@ -626,11 +632,11 @@ if(document.readyState === 'loading'){
       <div class="contact-card-new">
         <div class="card-title">DATA ANALYST</div>
         <div class="card-body">
-          <p>👤 ARINA SEPTIA ANDIA</p>
-          <p>✉️ ARINARINASEPTIA@GMAIL.COM</p>
-          <p>📷 ARINSEPTIAAN_</p>
+          <p>👤 Arina Septia Andria</p>
+          <p>✉️ arinarinaseptia@gmail.com</p>
+          <p>📷 arinseptiaan</p>
           <p>💼 Arina Septia</p>
-          <p>🏫 TEKNIK GEOMATIKA, UPNVY</p>
+          <p>🏫 Teknik Geomatika, UPNVY</p>
         </div>
       </div>
 
