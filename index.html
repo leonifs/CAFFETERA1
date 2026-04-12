@@ -731,7 +731,8 @@ if(document.readyState === 'loading'){
 
 .contact-header{
   display:flex;
-  justify-content:space-between;
+  justify-content:flex-start; /* rata kiri */
+  gap:10px;
   font-family:'Playfair Display', serif;
   letter-spacing:4px;
   font-size:20px;
@@ -739,27 +740,29 @@ if(document.readyState === 'loading'){
   padding:0 120px;
   color:#ffffff;
   position:relative;
-  z-index:3; /* PALING DEPAN (DI ATAS GRADASI) */
+  z-index:3;
 }
 
 .contact-main{
   display:flex;
-  align-items:center;
-  justify-content:center;
+  align-items:flex-start; /* sejajar atas */
+  justify-content:flex-start; /* rata kiri */
   gap:40px;
   flex-wrap:wrap;
   position:relative;
-  z-index:2; /* FOTO PALING ATAS */
+  z-index:2;
+  padding:0 120px; /* samakan dengan header */
 }
 
 .contact-img img{
   width:260px;
   height:380px;
   object-fit:cover;
-  border-radius:30px; /* MELENGKUNG */
-  border:2px solid rgba(255,255,255,0.9); /* GARIS BINGKAI */
-  padding:6px; /* jarak dalam biar elegan */
+  border-radius:30px;
+  border:2px solid rgba(255,255,255,0.9);
+  padding:6px;
   background:transparent;
+  display:block;
 }
 
 .contact-cards{
@@ -814,6 +817,8 @@ if(document.readyState === 'loading'){
   display:flex;
   flex-direction:column;
   gap:15px;
+  align-items:flex-start; /* rata kiri */
+  text-align:left; /* semua teks kiri */
 }
 
 .form-title{
@@ -822,6 +827,7 @@ if(document.readyState === 'loading'){
   letter-spacing:4px;
   color:#fff;
   margin-top:-10px;
+  text-align:left; /* judul kiri */
 }
 
 .field-label{
@@ -835,6 +841,7 @@ if(document.readyState === 'loading'){
 
 .contact-form input,
 .contact-form textarea{
+  width:100%; /* full kiri, tidak tengah */
   padding:12px;
   border:none;
   border-bottom:2px solid #fff;
