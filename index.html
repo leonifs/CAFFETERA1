@@ -648,10 +648,26 @@ if(document.readyState === 'loading'){
 <style>
 .contact-section{
   display:none;
-  background:#f4b35e;
+  background:linear-gradient(135deg,#f4b35e 0%,#f7c07a 50%,#f2a65a 100%);
   padding:60px 20px;
   font-family:'Playfair Display', serif;
   position:relative;
+  overflow:hidden;
+}
+
+/* BUBBLE GRADIENT ABSTRACT */
+.contact-section::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,0.25) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 45%),
+    radial-gradient(circle at 30% 80%, rgba(255,255,255,0.18) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.22) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
+  filter:blur(10px);
+  z-index:0;
 }
 
 /* GARIS TEPI TIPIS (PUTIH & SEDIKIT MELENGKUNG) */
