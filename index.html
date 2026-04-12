@@ -643,12 +643,42 @@ if(document.readyState === 'loading'){
 
   </div>
 
+  <!-- WAVE EFFECT (SAMA SEPERTI HERO, TIDAK MENUTUP ELEMEN) -->
+  <div class="contact-wave">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="#ffffff" fill-opacity="0.25" d="M0,160L60,165.3C120,171,240,181,360,176C480,171,600,149,720,149.3C840,149,960,171,1080,181.3C1200,192,1320,192,1380,192L1440,192L1440,320L0,320Z"></path>
+      <path fill="#ffffff" fill-opacity="0.15" d="M0,200L60,208C120,216,240,232,360,224C480,216,600,184,720,181.3C840,179,960,203,1080,213.3C1200,224,1320,224,1380,224L1440,224L1440,320L0,320Z"></path>
+    </svg>
+  </div>
+
 </section>
 
 <style>
+.contact-wave{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:150px;
+  z-index:0; /* DI BELAKANG SEMUA ELEMEN */
+  pointer-events:none;
+}
+
+.contact-wave svg{
+  width:100%;
+  height:100%;
+}
+
 .contact-section{
   display:none;
-  background:linear-gradient(135deg,#f4b35e 0%,#f7c07a 50%,#f2a65a 100%);
+  background:linear-gradient(
+    to bottom,
+    #f2a65a 0%,
+    #f4b35e 25%,
+    #f7c07a 50%,
+    #f9d5a7 70%,
+    #fff2e1 100%
+  );
   padding:60px 20px;
   font-family:'Playfair Display', serif;
   position:relative;
@@ -666,9 +696,19 @@ if(document.readyState === 'loading'){
     radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 45%),
     radial-gradient(circle at 30% 80%, rgba(255,255,255,0.18) 0%, transparent 50%),
     radial-gradient(circle at 75% 75%, rgba(255,255,255,0.22) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
-  filter:blur(20px);
-  z-index:-1; /* PASTI DI BELAKANG */
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12) 0%, transparent 60%),
+    radial-gradient(circle at 10% 70%, rgba(255,255,255,0.15) 0%, transparent 50%),
+    radial-gradient(circle at 90% 60%, rgba(255,255,255,0.18) 0%, transparent 50%);
+  animation: bubbleMove 20s infinite linear;
+  filter:blur(18px);
+  z-index:-2; /* PALING BELAKANG, TIDAK NUTUP ELEMEN */
+  pointer-events:none;
+}
+
+@keyframes bubbleMove{
+  0%{transform:translateY(0px) scale(1);}
+  50%{transform:translateY(-20px) scale(1.05);}
+  100%{transform:translateY(0px) scale(1);}
 }
 
 /* GARIS TEPI TIPIS (PUTIH & SEDIKIT MELENGKUNG) */
