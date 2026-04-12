@@ -610,41 +610,39 @@ if(document.readyState === 'loading'){
 
     <!-- LEFT IMAGE -->
     <div class="contact-img left">
-      <img src="Leoni.png">
+      <img src="REMOVED.png">
     </div>
 
     <!-- CARD WRAPPER -->
     <div class="contact-cards">
 
-      <!-- LEONI CARD -->
-      <div class="contact-card-new">
-        <div class="card-title">WEB DEVELOPMENT</div>
-        <div class="card-body">
-          <p>👤 Leoni Fransiska</p>
-          <p>✉️ leonif248@gmail.com</p>
-          <p>📷 leonifs_</p>
-          <p>💼 Leoni Fransiska</p>
-          <p>🏫 Teknik Geomatika, UPNVY</p>
-        </div>
-      </div>
+      <!-- FORM CONTACT (KANAN FOTO LEONI) -->
+      <div class="contact-form">
+        <h2 class="form-title">WEBGIS DEVELOPMENT</h2>
 
-      <!-- ARINA CARD -->
-      <div class="contact-card-new">
-        <div class="card-title">DATA ANALYST</div>
-        <div class="card-body">
-          <p>👤 Arina Septia Andria</p>
-          <p>✉️ arinarinaseptia@gmail.com</p>
-          <p>📷 arinseptiaan</p>
-          <p>💼 Arina Septia</p>
-          <p>🏫 Teknik Geomatika, UPNVY</p>
+        <label class="field-label">Name</label>
+        <input type="text" id="name" value="Leoni Fransiska" readonly>
+        <div class="row">
+          <div style="flex:1">
+            <label class="field-label">Email</label>
+            <input type="email" id="email" value="leonifs248@gmail.com" readonly>
+          </div>
+          <div style="flex:1">
+            <label class="field-label">LinkedIn</label>
+            <input type="text" id="linkedin" value="Leoni Fransiska" readonly>
+          </div>
         </div>
+
+        <textarea id="message" placeholder="Hi..."></textarea>
+
+        <button onclick="sendWhatsApp()">KIRIM</button>
       </div>
 
     </div>
 
     <!-- RIGHT IMAGE -->
     <div class="contact-img right">
-      <img src="Arina.png">
+      
     </div>
 
   </div>
@@ -776,6 +774,8 @@ if(document.readyState === 'loading'){
   background:#ddd;
   box-shadow:0 10px 25px rgba(0,0,0,0.2);
   position:relative;
+  border-radius:25px; /* MELENGKUNG (TIDAK LANCIP) */
+  overflow:hidden; /* BIAR ISI IKUT ROUNDED */
 }
 
 /* OVERLAY KE FOTO (TANPA GESER FOTO) */
@@ -796,6 +796,8 @@ if(document.readyState === 'loading'){
   font-family:'Playfair Display', serif;
   letter-spacing:2px;
   font-size:18px;
+  border-top-left-radius:25px; /* IKUT MELENGKUNG */
+  border-top-right-radius:25px;
 }
 
 .card-body{
@@ -805,8 +807,67 @@ if(document.readyState === 'loading'){
   line-height:2;
 }
 
+/* CONTACT FORM STYLE */
+.contact-form{
+  width:420px;
+  background:transparent;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.form-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:40px;
+  letter-spacing:4px;
+  color:#fff;
+  margin-top:-10px;
+}
+
+.field-label{
+  font-size:12px;
+  color:#fff;
+  opacity:0.8;
+  letter-spacing:1px;
+  margin-bottom:4px;
+  display:block;
+}
+
+.contact-form input,
+.contact-form textarea{
+  padding:12px;
+  border:none;
+  border-bottom:2px solid #fff;
+  background:rgba(255,255,255,0.2);
+  color:#fff;
+  outline:none;
+  font-family:'Montserrat',sans-serif;
+}
+
+.contact-form textarea{
+  min-height:100px;
+  resize:none;
+}
+
+.contact-form .row{
+  display:flex;
+  gap:10px;
+}
+
+.contact-form button{
+  margin-top:10px;
+  padding:12px;
+  border:none;
+  background:#fff;
+  color:#333;
+  cursor:pointer;
+  letter-spacing:2px;
+}
+
 @media(max-width:900px){
   .contact-main{flex-direction:column}
+  .contact-form{width:100%}
+}
   .contact-cards{flex-direction:column}
 }
 </style>
@@ -1297,6 +1358,22 @@ window.closeModal = function(){
 
   }, 300);
 });
+// WHATSAPP INTEGRATION (NO BUG)
+function sendWhatsApp(){
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const linkedin = document.getElementById('linkedin').value;
+  const message = document.getElementById('message').value;
+
+  const text = `Name: ${name}
+Email: ${email}
+LinkedIn: ${linkedin}
+Message: ${message}`;
+  const url = "https://wa.me/628979390425?text=" + encodeURIComponent(text);
+
+  window.open(url, '_blank');
+}
+
 </script>
 </body>
 </html>
