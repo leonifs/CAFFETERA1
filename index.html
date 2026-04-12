@@ -1365,8 +1365,7 @@ function sendWhatsApp(){
   const linkedin = document.getElementById('linkedin').value;
   const message = document.getElementById('message').value;
 
-  const text = `
-Message: ${message}`;
+  const text = `Message: ${message}`;
   const url = "https://wa.me/628979390425?text=" + encodeURIComponent(text);
 
   window.open(url, '_blank');
