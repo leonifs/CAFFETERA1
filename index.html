@@ -653,6 +653,7 @@ if(document.readyState === 'loading'){
   font-family:'Playfair Display', serif;
   position:relative;
   overflow:hidden;
+  z-index:0; /* BASE */
 }
 
 /* BUBBLE GRADIENT ABSTRACT */
@@ -666,8 +667,8 @@ if(document.readyState === 'loading'){
     radial-gradient(circle at 30% 80%, rgba(255,255,255,0.18) 0%, transparent 50%),
     radial-gradient(circle at 75% 75%, rgba(255,255,255,0.22) 0%, transparent 45%),
     radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 0%, transparent 60%);
-  filter:blur(10px);
-  z-index:0;
+  filter:blur(20px);
+  z-index:-1; /* PASTI DI BELAKANG */
 }
 
 /* GARIS TEPI TIPIS (PUTIH & SEDIKIT MELENGKUNG) */
@@ -679,8 +680,9 @@ if(document.readyState === 'loading'){
   right:20px;
   bottom:20px;
   border:1px solid rgba(255,255,255,0.9);
-  border-radius:20px; /* sedikit melengkung */
+  border-radius:20px;
   pointer-events:none;
+  z-index:1; /* FRAME DI ATAS BACKGROUND */
 }
 
 .contact-header{
@@ -691,7 +693,9 @@ if(document.readyState === 'loading'){
   font-size:20px;
   margin-bottom:40px;
   padding:0 120px;
-  color:#ffffff; /* WARNA PUTIH */
+  color:#ffffff;
+  position:relative;
+  z-index:2; /* TEKS DI ATAS */
 }
 
 .contact-main{
@@ -700,6 +704,8 @@ if(document.readyState === 'loading'){
   justify-content:center;
   gap:40px;
   flex-wrap:wrap;
+  position:relative;
+  z-index:2; /* FOTO PALING ATAS */
 }
 
 .contact-img img{
