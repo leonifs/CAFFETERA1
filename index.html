@@ -678,12 +678,26 @@ if(document.readyState === 'loading'){
 .contact-cards{
   display:flex;
   gap:20px;
+  position:relative;
+  z-index:2;
 }
 
 .contact-card-new{
   width:300px;
   background:#ddd;
   box-shadow:0 10px 25px rgba(0,0,0,0.2);
+  position:relative;
+}
+
+/* OVERLAY KE FOTO (TANPA GESER FOTO) */
+.contact-card-new:first-child{
+  transform:translateX(-80px); /* masuk ke Leoni */
+  z-index:3;
+}
+
+.contact-card-new:last-child{
+  transform:translateX(80px); /* masuk ke Arina */
+  z-index:3;
 }
 
 .card-title{
