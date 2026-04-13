@@ -442,28 +442,28 @@
   <div class="section-title">COFFEE INSIGHT</div>
   <div class="charts" id="charts">
 
-    <div class="card">
+    <div class="card" data-sheet="Aesthetic Coffee">
       <div class="donut aesthetic">
         <div class="value">80%</div>
       </div>
       <p>Aesthetic Coffee</p>
     </div>
 
-    <div class="card">
+    <div class="card" data-sheet="Working Coffee">
       <div class="donut cowork">
         <div class="value">70%</div>
       </div>
       <p>Co-Working Coffee</p>
     </div>
 
-    <div class="card">
+    <div class="card" data-sheet="Family Coffee">
       <div class="donut family">
         <div class="value">60%</div>
       </div>
       <p>Family Coffee</p>
     </div>
 
-    <div class="card">
+    <div class="card" data-sheet="Romantic Coffee">
       <div class="donut romantic">
         <div class="value">50%</div>
       </div>
@@ -1423,5 +1423,77 @@ function sendWhatsAppArina(){
 }
 
 </script>
+
+<!-- ================= CHART CLICK → GOOGLE SHEET PER SHEET (TIDAK GANGGU SCRIPT LAIN) ================= -->
+<script>
+const BASE_SHEET_SINGLE = "https://docs.google.com/spreadsheets/d/1kXUHIRUVW6DH_RG_kKLMpKFZWboa-vA39JSbftajr50/gviz/tq?tqx=out:json";
+
+async function loadSheetPerName(sheetName){
+  try{
+    const url = BASE_SHEET_SINGLE + "&sheet=" + encodeURIComponent(sheetName);
+    const res = await fetch(url);
+    const txt = await res.text();
+
+    const start = txt.indexOf('{');
+    const end = txt.lastIndexOf('}');
+    const json = JSON.parse(txt.substring(start, end+1));
+
+    const cols = json.table.cols || [];
+    const rows = json.table.rows || [];
+
+    let html = `<table class="sheet-table">`;
+
+    html += "<tr>";
+    cols.slice(0,5).forEach(c=>{
+      html += `<th class="sheet-th">${c.label}</th>`;
+    });
+    html += "</tr>";
+
+    rows.forEach(r=>{
+      html += "<tr>";
+      (r.c || []).slice(0,5).forEach(cell=>{
+        html += `<td class="sheet-td">${cell ? cell.v : ''}</td>`;
+      });
+      html += "</tr>";
+    });
+
+    html += "</table>";
+
+    document.getElementById('sheetTable').innerHTML = html;
+
+  }catch(e){
+    document.getElementById('sheetTable').innerHTML = "GAGAL LOAD DATA (NAMA SHEET HARUS SAMA)";
+    console.error(e);
+  }
+}
+
+// CLICK HANYA CHART (CARD)
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('click', function(){
+    const sheetName = this.getAttribute('data-sheet');
+
+    document.querySelector('.hero').style.display='none';
+    document.querySelector('.next-section').style.display='none';
+
+    let page = document.getElementById('page2');
+    if(!page){
+      page = document.createElement('div');
+      page.id = 'page2';
+      document.body.appendChild(page);
+    }
+
+    page.innerHTML = `
+      <div style="margin-top:40px;text-align:center">
+        <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${sheetName}</h1>
+        <p style="font-family:'Playfair Display', serif;letter-spacing:2px">ALL DATA COFFEE SPACE FOR YOU!</p>
+        <div id="sheetTable">Loading data...</div>
+      </div>
+    `;
+
+    loadSheetPerName(sheetName);
+  });
+});
+</script>
+
 </body>
 </html>
