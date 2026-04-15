@@ -397,6 +397,32 @@
   top:80px !important; /* turun dari header */
 }
 
+/* SCROLL ANIMATION GLOBAL */
+.fade-up{
+  opacity:0;
+  transform:translateY(40px);
+  transition:all 0.8s ease;
+}
+.fade-up.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* LEFT TO RIGHT ANIMATION (KHUSUS NAMA + REVIEW) */
+.fade-left{
+  opacity:0;
+  transform:translateX(-60px);
+  transition:all 0.8s ease;
+}
+.fade-left.show{
+  opacity:1;
+  transform:translateX(0);
+}
+.fade-up.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
 </style>
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -717,6 +743,32 @@ setTimeout(()=>{
 </script>
 
 <script>
+
+// ===== APPLY ANIMATION KE SEMUA ELEMEN HOME =====
+document.addEventListener('DOMContentLoaded', ()=>{
+  const targets = document.querySelectorAll('.card, .section-title, .slider, .map-box');
+  const leftTargets = document.querySelectorAll('.coffee-name, .review-box');
+
+  targets.forEach(el=>{
+    el.classList.add('fade-up');
+  });
+
+  leftTargets.forEach(el=>{
+    el.classList.add('fade-left');
+  });
+
+  const observerAll = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('show');
+      }
+    });
+  },{threshold:0.2});
+
+  targets.forEach(el=>observerAll.observe(el));
+  leftTargets.forEach(el=>observerAll.observe(el));
+});
+
 const charts = document.getElementById('charts');
 
 const observer = new IntersectionObserver(entries=>{
@@ -1321,6 +1373,9 @@ document.querySelectorAll('.top-link').forEach(link=>{
 
 // HOME FIX (CLEAN)
 document.getElementById('homeBtn').onclick = function(e){
+  // BALIKIN MINIMAP SAAT KE HOME
+  const miniSection = document.querySelector('.map-list-section');
+  if(miniSection) miniSection.style.display = 'block';
   e.preventDefault();
   document.querySelector('.hero').style.display='flex';
   document.querySelector('.next-section').style.display='flex';
@@ -1335,6 +1390,9 @@ document.getElementById('homeBtn').onclick = function(e){
 const mapBtn = document.querySelectorAll('.nav-item')[1]; // CO-MAP
 
 mapBtn.addEventListener('click', function(e){
+  // HIDE MINIMAP SECTION BIAR TIDAK KEDIP / LAG
+  const miniSection = document.querySelector('.map-list-section');
+  if(miniSection) miniSection.style.display = 'none';
   e.preventDefault();
 
   document.querySelector('.hero').style.display = 'none';
