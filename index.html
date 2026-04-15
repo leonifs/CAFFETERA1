@@ -466,6 +466,10 @@
 
 <section class="next-section">
   <div class="section-title">COFFEE INSIGHT</div>
+  
+  <p style="max-width:900px;text-align:center;margin-top:2px;font-size:14px;color:#444;letter-spacing:1px;font-family:'Montserrat',sans-serif;">
+    Explore what kind of coffee places people love the most from cozy romantic spots to lively family hangouts.
+  </p>
   <div class="charts" id="charts">
 
     <div class="card" data-sheet="Aesthetic Coffee">
@@ -500,6 +504,7 @@
   <!-- SPECIAL FOR YOU -->
   <div class="special">
     <div class="section-title">SPECIAL FOR YOU</div>
+  
 
     <div class="slider">
       <button class="nav prev">&#10094;</button>
@@ -1957,5 +1962,49 @@ document.querySelectorAll('.card').forEach(card=>{
 });
 </script>
 
+<style>
+/* ACTIVE HEADER STATE */
+.nav-item.active{
+  color:#ff7a18 !important;
+  font-weight:600;
+}
+</style>
+
+<script>
+// ===== ACTIVE NAV CONTROL =====
+const navItems = document.querySelectorAll('.nav-item');
+const topParent = document.querySelector('.dropdown > .nav-item');
+
+function clearActive(){
+  navItems.forEach(n=>n.classList.remove('active'));
+}
+
+function setActive(el){
+  clearActive();
+  if(el) el.classList.add('active');
+}
+
+// HOME
+const homeBtnFix = document.getElementById('homeBtn');
+homeBtnFix.addEventListener('click', ()=>{
+  setActive(homeBtnFix);
+});
+
+// CO-MAP
+const mapBtnFix = document.querySelectorAll('.nav-item')[1];
+mapBtnFix.addEventListener('click', ()=>{
+  setActive(mapBtnFix);
+});
+
+// TOP 10 (parent highlight when dropdown item clicked)
+document.querySelectorAll('.top-link').forEach(link=>{
+  link.addEventListener('click', ()=>{
+    setActive(topParent);
+  });
+});
+
+// DEFAULT ACTIVE = HOME
+setActive(homeBtnFix);
+</script>
 </body>
 </html>
