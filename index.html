@@ -1200,6 +1200,11 @@ homeBtn.addEventListener('click', (e)=>{
 // NAVIGASI DROPDOWN → PAGE 2 (AMAN, TANPA MERUSAK SCRIPT LAIN)
 document.querySelectorAll('.top-link').forEach(link=>{
   link.addEventListener('click', function(e){
+    // FIX: HIDE MINIMAP + FOOTER (ANTI OVERLAY / LAG)
+    const mini = document.querySelector('.map-list-section');
+    if(mini) mini.style.display = 'none';
+    const footer = document.querySelector('.footer');
+    if(footer) footer.style.display = 'none';
     e.preventDefault();
 
     const title = this.getAttribute('data-page');
@@ -1220,7 +1225,7 @@ document.querySelectorAll('.top-link').forEach(link=>{
 
     page.innerHTML = `
       <div style="
-        margin-top:30px;
+        margin-top:90px;
         display:flex;
         justify-content:flex-start;
         align-items:center;
@@ -1298,6 +1303,11 @@ async function loadSheet(url){
 // SINGLE NAVIGATION HANDLER (ANTI BUG)
 document.querySelectorAll('.top-link').forEach(link=>{
   link.onclick = function(e){
+    // FIX: HIDE MINIMAP + FOOTER (ANTI OVERLAY / LAG)
+    const mini = document.querySelector('.map-list-section');
+    if(mini) mini.style.display = 'none';
+    const footer = document.querySelector('.footer');
+    if(footer) footer.style.display = 'none';
     e.preventDefault();
 
     const title = this.dataset.page;
@@ -1315,7 +1325,7 @@ document.querySelectorAll('.top-link').forEach(link=>{
     // AESTHETIC
     if(title === "AESTHETIC COFFEE"){
       page.innerHTML = `
-        <div style="margin-top:40px;text-align:center">
+        <div style="margin-top:90px;text-align:center">
           <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
           <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
           <div id="sheetTable">Loading data...</div>
@@ -1327,7 +1337,7 @@ document.querySelectorAll('.top-link').forEach(link=>{
     // WORKING (FIXED)
     else if(title === "WORKING COFFEE"){
       page.innerHTML = `
-        <div style="margin-top:40px;text-align:center">
+        <div style="margin-top:90px;text-align:center">
           <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
           <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
           <div id="sheetTable">Loading data...</div>
@@ -1339,7 +1349,7 @@ document.querySelectorAll('.top-link').forEach(link=>{
     // FAMILY (NEW FIX NO BUG)
     else if(title === "FAMILY COFFEE"){
       page.innerHTML = `
-        <div style="margin-top:40px;text-align:center">
+        <div style="margin-top:90px;text-align:center">
           <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
           <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
           <div id="sheetTable">Loading data...</div>
@@ -1350,7 +1360,7 @@ document.querySelectorAll('.top-link').forEach(link=>{
     // ROMANTIC (FINAL FIX NO BUG)
     else if(title === "ROMANTIC COFFEE"){
       page.innerHTML = `
-        <div style="margin-top:40px;text-align:center">
+        <div style="margin-top:90px;text-align:center">
           <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
           <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
           <div id="sheetTable">Loading data...</div>
@@ -1362,7 +1372,7 @@ document.querySelectorAll('.top-link').forEach(link=>{
     // OTHER
     else{
       page.innerHTML = `
-        <div style="margin-top:40px;text-align:center">
+        <div style="margin-top:90px;text-align:center">
           <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
           <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
         </div>
@@ -1373,6 +1383,11 @@ document.querySelectorAll('.top-link').forEach(link=>{
 
 // HOME FIX (CLEAN)
 document.getElementById('homeBtn').onclick = function(e){
+  // BALIKIN MINIMAP + FOOTER
+  const mini = document.querySelector('.map-list-section');
+  if(mini) mini.style.display = 'block';
+  const footer = document.querySelector('.footer');
+  if(footer) footer.style.display = 'block';
   // BALIKIN MINIMAP SAAT KE HOME
   const miniSection = document.querySelector('.map-list-section');
   if(miniSection) miniSection.style.display = 'block';
@@ -1749,6 +1764,12 @@ async function loadSheetPerName(sheetName){
 // CLICK HANYA CHART (CARD)
 document.querySelectorAll('.card').forEach(card=>{
   card.addEventListener('click', function(){
+
+    // FIX: HIDE MINIMAP + FOOTER (ANTI LAG / OVERLAY DI INSIGHT)
+    const mini = document.querySelector('.map-list-section');
+    if(mini) mini.style.display = 'none';
+    const footer = document.querySelector('.footer');
+    if(footer) footer.style.display = 'none';
     const sheetName = this.getAttribute('data-sheet');
 
     document.querySelector('.hero').style.display='none';
@@ -1762,7 +1783,7 @@ document.querySelectorAll('.card').forEach(card=>{
     }
 
     page.innerHTML = `
-      <div style="margin-top:40px;text-align:center">
+      <div style="margin-top:90px;text-align:center">
         <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${sheetName}</h1>
         <p style="font-family:'Playfair Display', serif;letter-spacing:2px">ALL DATA COFFEE SPACE FOR YOU!</p>
         <div id="sheetTable">Loading data...</div>
