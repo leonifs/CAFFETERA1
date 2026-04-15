@@ -495,6 +495,221 @@
   </div>
   </section>
 
+<!-- ================= NEW SCROLL SECTION (MAP + COFFEE LIST) ================= -->
+<section class="map-list-section">
+
+  <div class="map-list-container">
+
+    <!-- LEFT MAP -->
+    <div class="map-box">
+      <div id="miniMap"></div>
+    </div>
+
+    <!-- RIGHT LIST -->
+    <div class="coffee-list" id="coffeeList">
+      <!-- AUTO GENERATED -->
+    </div>
+
+  </div>
+
+</section>
+
+<style>
+.map-list-section{
+  min-height:100vh;
+  background:url('WALLPAPERBAWAH.png') center/cover no-repeat;
+  padding:60px 40px;
+}
+
+.map-list-container{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:30px;
+}
+
+.map-box{
+  background:rgba(255,255,255,0.9);
+  border-radius:20px;
+  padding:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+#miniMap{
+  width:100%;
+  height:500px;
+  border-radius:15px;
+}
+
+.coffee-list{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  max-height:500px;
+  overflow-y:auto;
+}
+
+.coffee-card{
+  background:rgba(255,255,255,0.95);
+  border-radius:15px;
+  padding:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+.coffee-name{
+  font-family:'Bebas Neue';
+  letter-spacing:2px;
+  font-size:20px;
+  color:#ff7a18;
+}
+
+.coffee-rating{
+  font-size:14px;
+  margin:5px 0;
+}
+
+.review-box{
+  max-height:70px;
+  overflow-y:auto;
+  font-size:12px;
+  background:#fff5ee;
+  padding:8px;
+  border-radius:8px;
+}
+
+@media(max-width:900px){
+  .map-list-container{grid-template-columns:1fr}
+}
+</style>
+
+<script>
+// ===== MINI MAP INIT (SYNC WITH CO-MAP DATA: ALL SHOPS + REVIEWS + SHORTCUT) =====
+setTimeout(()=>{
+  const miniMap = L.map('miniMap').setView([-7.770,110.377],13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(miniMap);
+
+  // === SAME DATA AS CO-MAP (DISALIN AGAR 100% MUNCUL SEMUA) ===
+  const aesthetic = [
+    {lat:-7.770,lng:110.370,name:'Aesthetic Coffee 1',rating:4.5},
+    {lat:-7.766,lng:110.365,name:'Aesthetic Coffee 2',rating:4.2},
+    {lat:-7.772,lng:110.385,name:'Aesthetic Coffee 3',rating:4.7},
+    {lat:-7.768,lng:110.378,name:'Aesthetic Coffee 4',rating:4.3}
+  ];
+
+  const working = [
+    {lat:-7.769,lng:110.372,name:'Working Coffee 1',rating:4.1},
+    {lat:-7.775,lng:110.388,name:'Working Coffee 2',rating:4.4},
+    {lat:-7.763,lng:110.360,name:'Working Coffee 3',rating:4.0},
+    {lat:-7.771,lng:110.378,name:'Working Coffee 4',rating:4.3}
+  ];
+
+  const family = [
+    {lat:-7.768,lng:110.374,name:'Family Coffee 1',rating:4.6},
+    {lat:-7.776,lng:110.390,name:'Family Coffee 2',rating:4.2},
+    {lat:-7.764,lng:110.362,name:'Family Coffee 3',rating:4.1},
+    {lat:-7.773,lng:110.382,name:'Family Coffee 4',rating:4.5},
+    {lat:-7.767,lng:110.368,name:'Family Coffee 5',rating:4.3},
+    {lat:-7.774,lng:110.386,name:'Family Coffee 6',rating:4.4},
+    {lat:-7.762,lng:110.358,name:'Family Coffee 7',rating:4.2}
+  ];
+
+  const romantic = [
+    {lat:-7.771,lng:110.376,name:'Romantic Coffee 1',rating:4.8},
+    {lat:-7.777,lng:110.392,name:'Romantic Coffee 2',rating:4.6},
+    {lat:-7.765,lng:110.364,name:'Romantic Coffee 3',rating:4.5},
+    {lat:-7.772,lng:110.380,name:'Romantic Coffee 4',rating:4.7},
+    {lat:-7.768,lng:110.369,name:'Romantic Coffee 5',rating:4.4},
+    {lat:-7.775,lng:110.387,name:'Romantic Coffee 6',rating:4.6},
+    {lat:-7.763,lng:110.361,name:'Romantic Coffee 7',rating:4.3},
+    {lat:-7.770,lng:110.373,name:'Romantic Coffee 8',rating:4.7},
+    {lat:-7.766,lng:110.366,name:'Romantic Coffee 9',rating:4.5},
+    {lat:-7.774,lng:110.384,name:'Romantic Coffee 10',rating:4.6}
+  ];
+
+  // ===== ICON SAMA PERSIS DENGAN CO-MAP =====
+  function icon(color){
+    return L.divIcon({
+      className:'',
+      html:`<div style="width:14px;height:14px;background:${color};border-radius:50%;border:2px solid white"></div>`
+    });
+  }
+
+  const list = document.getElementById('coffeeList');
+  list.innerHTML = '';
+
+  function generateReviews(name){
+    const sample = [
+      'Tempatnya aesthetic banget!',
+      'Cocok buat kerja lama.',
+      'Pelayanan ramah dan cepat.',
+      'Ambience nyaman dan tenang.',
+      'Menu variatif dan enak.',
+      'Worth it buat nongkrong!'
+    ];
+
+    let html = '';
+
+    for(let i=0;i<4;i++){
+      html += `
+        <div style="display:flex;gap:10px;margin-bottom:10px;align-items:flex-start">
+          <div style="width:32px;height:32px;background:#ddd;border-radius:50%"></div>
+          <div>
+            <div style="font-size:11px;color:#555"><b>From:</b> user${i+1}@mail.com</div>
+            <div style="font-size:12px;color:#333">${sample[i]}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    return html;
+  }
+
+  // ===== RENDER SESUAI CO-MAP (WARNA & STYLE SAMA) =====
+  function renderCategory(data, color){
+    data.forEach(item=>{
+      L.marker([item.lat,item.lng], {icon:icon(color)})
+        .addTo(miniMap)
+        .bindPopup(item.name);
+
+      list.innerHTML += `
+        <div class="coffee-card">
+          <div class="coffee-name">${item.name}</div>
+          <div class="coffee-rating">⭐ ${item.rating}</div>
+          <div class="review-box">${generateReviews(item.name)}</div>
+        </div>
+      `;
+    });
+  }
+
+  renderCategory(aesthetic,'red');
+  renderCategory(working,'orange');
+  renderCategory(family,'green');
+  renderCategory(romantic,'pink');
+
+  // === BUTTON SHORTCUT KE CO-MAP (HIDDEN NAVIGATION) ===
+  const btn = document.createElement('button');
+  btn.innerText = '⛶';
+  btn.title = 'Open Full CO-MAP';
+  btn.style.position = 'absolute';
+  btn.style.top = '15px';
+  btn.style.right = '15px';
+  btn.style.zIndex = '1000';
+  btn.style.padding = '10px';
+  btn.style.background = '#ff7a18';
+  btn.style.color = '#fff';
+  btn.style.border = 'none';
+  btn.style.borderRadius = '8px';
+  btn.style.cursor = 'pointer';
+
+  btn.onclick = ()=>{
+    document.querySelectorAll('.nav-item')[1].click();
+  };
+
+  document.querySelector('.map-box').appendChild(btn);
+
+},500);
+</script>
+
 <script>
 const charts = document.getElementById('charts');
 
