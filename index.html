@@ -1564,12 +1564,12 @@ document.querySelectorAll('.top-link').forEach(link=>{
 
 
 document.getElementById('homeBtn').onclick = function(e){
- 
+  // BALIKIN MINIMAP + FOOTER
   const mini = document.querySelector('.map-list-section');
   if(mini) mini.style.display = 'block';
   const footer = document.querySelector('.footer');
   if(footer) footer.style.display = 'block';
-  
+  // BALIKIN MINIMAP SAAT KE HOME
   const miniSection = document.querySelector('.map-list-section');
   if(miniSection) miniSection.style.display = 'block';
   e.preventDefault();
@@ -1581,12 +1581,12 @@ document.getElementById('homeBtn').onclick = function(e){
 }
 </script>
 
-
+<!-- CO-MAP PAGE (INTERACTIVE MAP) -->
 <script>
-const mapBtn = document.querySelectorAll('.nav-item')[1]; 
+const mapBtn = document.querySelectorAll('.nav-item')[1]; // CO-MAP
 
 mapBtn.addEventListener('click', function(e){
-  
+  // HIDE MINIMAP SECTION BIAR TIDAK KEDIP / LAG
   const miniSection = document.querySelector('.map-list-section');
   if(miniSection) miniSection.style.display = 'none';
   e.preventDefault();
@@ -1642,7 +1642,7 @@ mapBtn.addEventListener('click', function(e){
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    
+    // ===== LOAD GEOJSON YOGYAKARTA (GITHUB: leonifs/COFFETERA) =====
     fetch('https://raw.githubusercontent.com/leonifs/COFFETERA/main/YOGYAKARTA.json')
       .then(res => res.json())
       .then(data => {
@@ -1656,7 +1656,7 @@ mapBtn.addEventListener('click', function(e){
       })
       .catch(err => console.error('Gagal load GeoJSON:', err));
 
-    
+    // ===== ICON WARNA =====
     function icon(color){
       return L.divIcon({
         className:'',
@@ -1664,13 +1664,13 @@ mapBtn.addEventListener('click', function(e){
       });
     }
 
-    
+    // ===== LAYER GROUP =====
     const aestheticLayer = L.layerGroup().addTo(map);
     const workingLayer = L.layerGroup().addTo(map);
     const familyLayer = L.layerGroup().addTo(map);
     const romanticLayer = L.layerGroup().addTo(map);
 
-    
+    // ===== DATA (SINKRON DENGAN MINI MAP - KOTA YOGYAKARTA) =====
     const aesthetic = [
       {lat:-7.802,lng:110.364,name:'Aesthetic Coffee 1', img:'1.png', rating:4.5},
       {lat:-7.795,lng:110.372,name:'Aesthetic Coffee 2', img:'2.png', rating:4.2},
@@ -1708,7 +1708,8 @@ mapBtn.addEventListener('click', function(e){
       {lat:-7.802,lng:110.388,name:'Romantic Coffee 10', img:'10.png', rating:4.6}
     ];
 
-
+    // ===== HAPUS KETERGANTUNGAN MAP (INSIGHT TIDAK BOLEH DI SINI) =====
+// (sengaja dikosongkan agar tidak override insight awal)
 
     function addMarkers(data, layer, color){
       data.forEach(item=>{
@@ -1734,7 +1735,7 @@ mapBtn.addEventListener('click', function(e){
       });
     }
 
-    
+    // ================= GOOGLE SHEET DETAIL (ROBUST PARSER) =================
 const DETAIL_BASE = "https://docs.google.com/spreadsheets/d/1trw5vm3xkZeZ3HSUVBBdldohcElzXLRk31eYiiGjixw/gviz/tq?tqx=out:json";
 
 async function loadDetailSheetByName(sheetName){
@@ -1743,7 +1744,7 @@ async function loadDetailSheetByName(sheetName){
     const res = await fetch(url);
     const txt = await res.text();
 
-    
+    // robust clean (handle gviz wrapper)
     const start = txt.indexOf('{');
     const end = txt.lastIndexOf('}');
     const json = JSON.parse(txt.substring(start, end+1));
@@ -1757,17 +1758,17 @@ async function loadDetailSheetByName(sheetName){
 
     let html = `<table class=\"sheet-table\">`;
 
-   
+    // HEADER FIX (SAMA UNTUK SEMUA)
     html += "<tr>";
     html += `<th class=\"sheet-th\">DATA</th>`;
     html += `<th class=\"sheet-th\">KETERANGAN</th>`;
     html += "</tr>";
 
-    
+    // NORMALISASI TOTAL (ANTI BUG TERMASUK AESTHETIC 3)
     rows.forEach(r=>{
       const raw = (r.c || []).map(cell => cell && cell.v !== null ? String(cell.v).trim() : '');
 
-     
+      // ambil hanya yang ada isi
       const cells = raw.filter(v => v !== '');
 
       if(cells.length === 0) return;
@@ -1775,7 +1776,7 @@ async function loadDetailSheetByName(sheetName){
       let left = cells[0];
       let right = '';
 
-      
+      // gabungkan semua sisa ke kanan (fix Aesthetic 3 pecah baris)
       if(cells.length > 1){
         right = cells.slice(1).join(' ');
       }else{
@@ -1798,21 +1799,21 @@ async function loadDetailSheetByName(sheetName){
   }
 }
 
-
+// ================= LEFT PANEL DETAIL (REPLACE MODAL) =================
 window.goToDetail = async function(name){
-  
+  // ONLY allow in CO-MAP page
   const mapPage = document.getElementById('map');
-  if(!mapPage) return; 
+  if(!mapPage) return; // STOP kalau bukan di CO-MAP
   let panel = document.getElementById('detailPanel');
 
   if(!panel){
     panel = document.createElement('div');
     panel.id = 'detailPanel';
     panel.style.position = 'fixed';
-    panel.style.top = '70px';
+    panel.style.top = '60px';
     panel.style.left = '0';
     panel.style.width = '380px';
-    panel.style.height = 'calc(100% - 70px)';
+    panel.style.height = 'calc(100% - 60px)';
     panel.style.background = '#ffffff';
     panel.style.zIndex = '2000';
     panel.style.boxShadow = '4px 0 20px rgba(0,0,0,0.2)';
@@ -1822,7 +1823,7 @@ window.goToDetail = async function(name){
     document.body.appendChild(panel);
   }
 
-  
+  // cari data marker (untuk ambil koordinat & gambar)
   let found = null;
   const allData = [...aesthetic, ...working, ...family, ...romantic];
   found = allData.find(d => d.name === name);
@@ -1834,18 +1835,18 @@ window.goToDetail = async function(name){
 
   const gmaps = `https://www.google.com/maps?q=${lat},${lng}`;
 
-  
+  // loading dulu
   panel.innerHTML = `
     <div>
       <img src="${img}" style="width:100%;height:220px;object-fit:cover">
 
       <div style="padding:15px">
-        <h2 style="font-weight:700;font-size:20px;color:#333">${name}</h2>
+        <h2 style="font-weight:700;font-size:20px;color:#333;font-family:'Playfair Display', serif">${name}</h2>
         <div style="margin:5px 0 15px 0;font-size:14px;color:#555">
           ${rating} ⭐⭐⭐⭐⭐ 
         </div>
 
-        <a href="${gmaps}" target="_blank" style="display:inline-block;text-align:center;background:#ff7a1a;color:#fff;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:600;font-size:12px;letter-spacing:0.5px">
+        <a href="${gmaps}" target="_blank" style="display:inline-block;text-align:center;background:#ff7a1a;color:#fff;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:600;font-size:12px;letter-spacing:0.5px;font-family:'Playfair Display', serif">
           ⤴ GO TO GOOGLE MAPS
         </a>
 
@@ -1878,12 +1879,12 @@ window.goToDetail = async function(name){
     </div>
   `;
 
-  
+  // load tabel
   const tableHTML = await loadDetailSheetByName(name);
   document.getElementById('detailTable').innerHTML = tableHTML;
 };
 
-
+// OPTIONAL CLOSE (CLICK OUTSIDE NOT USED NOW)
 window.closeModal = function(){
   const panel = document.getElementById('detailPanel');
   if(panel) panel.remove();
@@ -1894,7 +1895,7 @@ window.closeModal = function(){
     addMarkers(family, familyLayer, 'green');
     addMarkers(romantic, romanticLayer, 'pink');
 
-    
+    // ===== CHECKBOX CONTROL =====
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
     checkboxes[0].onchange = ()=>{
@@ -1919,7 +1920,7 @@ window.closeModal = function(){
 
   }, 300);
 });
-
+// WHATSAPP INTEGRATION (FINAL SESUAI PERMINTAAN)
 function sendWhatsApp(){
   const message = document.getElementById('message').value;
 
@@ -1950,7 +1951,7 @@ function sendWhatsAppArina(){
 
 </script>
 
-
+<!-- ================= CHART CLICK → GOOGLE SHEET PER SHEET (TIDAK GANGGU SCRIPT LAIN) ================= -->
 <script>
 const BASE_SHEET_SINGLE = "https://docs.google.com/spreadsheets/d/1kXUHIRUVW6DH_RG_kKLMpKFZWboa-vA39JSbftajr50/gviz/tq?tqx=out:json";
 
@@ -1993,11 +1994,11 @@ async function loadSheetPerName(sheetName){
   }
 }
 
-
+// CLICK HANYA CHART (CARD)
 document.querySelectorAll('.card').forEach(card=>{
   card.addEventListener('click', function(){
 
-    
+    // FIX: HIDE MINIMAP + FOOTER (ANTI LAG / OVERLAY DI INSIGHT)
     const mini = document.querySelector('.map-list-section');
     if(mini) mini.style.display = 'none';
     const footer = document.querySelector('.footer');
@@ -2028,7 +2029,7 @@ document.querySelectorAll('.card').forEach(card=>{
 </script>
 
 <style>
-
+/* ACTIVE HEADER STATE */
 .nav-item.active{
   color:#ff7a18 !important;
   font-weight:600;
@@ -2036,7 +2037,7 @@ document.querySelectorAll('.card').forEach(card=>{
 </style>
 
 <script>
-
+// ===== ACTIVE NAV CONTROL =====
 const navItems = document.querySelectorAll('.nav-item');
 const topParent = document.querySelector('.dropdown > .nav-item');
 
@@ -2049,7 +2050,8 @@ function setActive(el){
   if(el) el.classList.add('active');
 }
 
-
+// HOME
+// ===== FORCE CLOSE DETAIL PANEL WHEN LEAVING CO-MAP =====
 function removeDetailPanel(){
   const panel = document.getElementById('detailPanel');
   if(panel) panel.remove();
@@ -2061,14 +2063,14 @@ homeBtnFix.addEventListener('click', ()=>{
   setActive(homeBtnFix);
 });
 
-
+// CO-MAP
 const mapBtnFix = document.querySelectorAll('.nav-item')[1];
 mapBtnFix.addEventListener('click', ()=>{
   removeDetailPanel();
   setActive(mapBtnFix);
 });
 
-
+// TOP 10 (parent highlight when dropdown item clicked)
 document.querySelectorAll('.top-link').forEach(link=>{
   link.addEventListener('click', ()=>{
     removeDetailPanel();
@@ -2076,7 +2078,7 @@ document.querySelectorAll('.top-link').forEach(link=>{
   });
 });
 
-
+// DEFAULT ACTIVE = HOME
 setActive(homeBtnFix);
 </script>
 </body>
