@@ -2197,10 +2197,7 @@ let routingMap = null;
 let routingUserMarker = null;
 let routingCoffeeMarker = null;
 let routingLine = null;
-let routingAlternatives = [];
-let currentRouteMode = null;
 let watchRouteId = null;
-let selectedTravelMode = 'driving';
 
 window.startRoute = function(name){
 
@@ -2258,8 +2255,8 @@ window.startRoute = function(name){
                   ROUTE STATUS
                 </div>
 
-                <div id="routeDistance" style="font-size:24px;font-weight:700;line-height:1.2">
-                  Calculating...
+                <div id="routeDistance" style="font-size:15px;font-weight:700;line-height:1.35">
+                  Calculating fastest route...
                 </div>
               </div>
 
@@ -2270,11 +2267,22 @@ window.startRoute = function(name){
             </div>
 
             <div style="margin-top:16px;background:#fff7ef;border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,0.05)">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-                <button class="travelModeBtn activeMode" data-mode="driving">🚗</button>
-                <button class="travelModeBtn" data-mode="motorcycle">🏍️</button>
-                <button class="travelModeBtn" data-mode="cycling">🚲</button>
-                <button class="travelModeBtn" data-mode="walking">🚶</button>
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+
+                <div>
+                  <div style="font-size:11px;color:#9a8f82;letter-spacing:2px">
+                    NAVIGATION MODE
+                  </div>
+
+                  <div style="margin-top:6px;font-size:13px;font-weight:600">
+                    Fastest Route Active
+                  </div>
+                </div>
+
+                <div style="padding:7px 14px;background:#ff8d32;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1px">
+                  LIVE
+                </div>
+
               </div>
             </div>
 
@@ -2287,44 +2295,49 @@ window.startRoute = function(name){
         </div>
       </div>
 
-      <style>
-        .travelModeBtn{
-          width:54px;
-          height:54px;
-          border:none;
-          border-radius:18px;
-          background:#f1e4d6;
-          font-size:24px;
-          cursor:pointer;
-          transition:0.25s ease;
-        }
+        <div style="padding:24px;background:#161616;color:white">
 
-        .travelModeBtn.activeMode{
-          background:#ff7a18;
-          transform:scale(1.06);
-        }
-      </style>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+            <div>
+              <div style="font-size:11px;letter-spacing:2px;color:#9a8f82">ROUTE STATUS</div>
+              <div id="routeDistance" style="margin-top:6px;font-size:17px;font-weight:700;color:#fff">
+                Calculating fastest route...
+              </div>
+            </div>
+
+            <div style="width:64px;height:64px;border-radius:22px;background:linear-gradient(135deg,#2d2d2d,#1d1d1d);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06)">
+              <span style="font-size:28px">🧭</span>
+            </div>
+          </div>
+
+          <div style="background:#202020;border-radius:20px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.05)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:11px;color:#9a8f82;letter-spacing:2px">NAVIGATION MODE</div>
+                <div style="margin-top:4px;font-size:15px;font-weight:700">Fastest Route Active</div>
+              </div>
+
+              <div style="padding:8px 14px;background:#00c853;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:1px">
+                LIVE
+              </div>
+            </div>
+          </div>
+
+          <button onclick="backToComap()" style="width:100%;border:none;background:linear-gradient(135deg,#ff7a18,#ff9f43);color:white;padding:16px;border-radius:18px;font-weight:800;cursor:pointer;font-size:14px;letter-spacing:1px;box-shadow:0 10px 30px rgba(255,122,24,0.35)">
+            ← BACK TO CO-MAP
+          </button>
+
+        </div>
+      </div>
     </div>
   `;
 
   setTimeout(()=>{
 
-    // FIX BUG: destroy map lama sebelum membuat map baru
-    if(routingMap){
-      routingMap.remove();
-      routingMap = null;
-    }
+    routingMap = L.map('routeMap').setView([selected.lat, selected.lng], 15);
 
-    window.routeInitialized = false;
-
-    routingMap = L.map('routeMap',{
-      zoomControl:true
-    }).setView([selected.lat, selected.lng], 15);
-
-    // GOOGLE MAP STYLE
-    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-      maxZoom:20,
-      subdomains:['mt0','mt1','mt2','mt3']
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:'&copy; OpenStreetMap'
     }).addTo(routingMap);
 
     routingCoffeeMarker = L.marker([selected.lat, selected.lng])
@@ -2332,314 +2345,118 @@ window.startRoute = function(name){
       .bindPopup(selected.name)
       .openPopup();
 
-    function getGoogleTravelMode(mode){
-      // MODE ASLI GOOGLE MAPS DIRECTIONS API
-      if(mode === 'walking') return 'WALKING';
-      if(mode === 'cycling') return 'BICYCLING';
-      if(mode === 'motorcycle') return 'DRIVING';
-      return 'DRIVING';
+    if(!navigator.geolocation){
+      alert('Geolocation tidak didukung browser');
+      return;
     }
 
-    function getMotorcycleAdjustment(duration){
-      // motor lebih cepat karena bisa selap-selip
-      return duration * 0.72;
-    }
+    function updateRoute(userLat, userLng){
 
-    async function updateRoute(userLat, userLng){
+      if(routingUserMarker){
+        routingUserMarker.setLatLng([userLat,userLng]);
+      }else{
+        routingUserMarker = L.circleMarker([userLat,userLng],{
+          radius:9,
+          fillColor:'#007bff',
+          color:'#fff',
+          weight:3,
+          fillOpacity:1
+        }).addTo(routingMap).bindPopup('Your Location');
+      }
 
-      try{
+      // ===== REAL ROAD NETWORK ROUTING =====
+      const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&geometries=geojson`;
 
-        if(routingUserMarker){
-          routingUserMarker.setLatLng([userLat,userLng]);
-        }else{
-          routingUserMarker = L.circleMarker([userLat,userLng],{
-            radius:9,
-            fillColor:'#007bff',
-            color:'#fff',
-            weight:3,
-            fillOpacity:1
-          }).addTo(routingMap);
-        }
+      fetch(osrmUrl)
+        .then(res => res.json())
+        .then(data => {
 
-        // ===== DIFFERENT SMART ROUTING PROFILE =====
-        // tiap mode punya perilaku route berbeda
-
-        let osrmProfile = 'driving';
-        let routeAlternatives = true;
-
-        // jalan kaki → jalur pedestrian
-        if(selectedTravelMode === 'walking'){
-          osrmProfile = 'foot';
-        }
-
-        // sepeda → jalur bike friendly
-        if(selectedTravelMode === 'cycling'){
-          osrmProfile = 'bike';
-        }
-
-        // motor → lebih fleksibel
-        // pakai driving tapi nanti dipilihkan route sempit
-        if(selectedTravelMode === 'motorcycle'){
-          osrmProfile = 'driving';
-        }
-
-        // mobil → prioritaskan jalan besar
-        if(selectedTravelMode === 'driving'){
-          osrmProfile = 'driving';
-        }
-
-        const routeUrl = `https://router.project-osrm.org/route/v1/${osrmProfile}/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&alternatives=true&steps=true&geometries=geojson`;
-
-        const response = await fetch(routeUrl);
-
-        if(!response.ok){
-          throw new Error('Failed routing request');
-        }
-
-        const data = await response.json();
-
-        if(!data.routes || !data.routes.length){
-          throw new Error('Route not found');
-        }
-
-        // hapus route lama
-        if(routingLine){
-          routingMap.removeLayer(routingLine);
-        }
-
-        routingAlternatives.forEach(line=>{
-          routingMap.removeLayer(line);
-        });
-
-        routingAlternatives = [];
-
-        // ===== MULTIPLE ROUTE LIKE GOOGLE MAPS =====
-        // setiap mode punya route alternatif berbeda
-        // seperti Google Maps asli
-
-        let processedRoutes = [...data.routes];
-
-        // ===== WALKING =====
-        // prioritaskan shortcut pedestrian & gang kecil
-        if(selectedTravelMode === 'walking'){
-          processedRoutes = processedRoutes
-            .sort((a,b)=> a.distance - b.distance)
-            .map((r,i)=>({
-              ...r,
-              priority:i,
-              routeType:i===0 ? 'pedestrian-main' : 'pedestrian-shortcut'
-            }))
-            .slice(0,3);
-        }
-
-        // ===== CYCLING =====
-        // prioritaskan jalur lebih landai & nyaman
-        else if(selectedTravelMode === 'cycling'){
-          processedRoutes = processedRoutes
-            .sort((a,b)=> (a.duration*0.65+a.distance*0.35) - (b.duration*0.65+b.distance*0.35))
-            .map((r,i)=>({
-              ...r,
-              priority:i,
-              routeType:i===0 ? 'bike-main' : 'bike-alt'
-            }))
-            .slice(0,3);
-        }
-
-        // ===== MOTORCYCLE =====
-        // prioritaskan jalan cepat + jalan sempit
-        else if(selectedTravelMode === 'motorcycle'){
-
-          processedRoutes = processedRoutes
-            .sort((a,b)=> (a.distance*0.75+a.duration*0.25) - (b.distance*0.75+b.duration*0.25))
-            .map((r,i)=>({
-              ...r,
-              priority:i,
-              routeType:i===0 ? 'motor-main' : 'motor-small-road'
-            }))
-            .slice(0,4);
-
-          // simulasi alternatif gang kecil berbeda dari mobil
-          processedRoutes.forEach((r,idx)=>{
-            if(idx !== 0 && r.geometry && r.geometry.coordinates){
-              r.geometry.coordinates = r.geometry.coordinates.map((c,index)=>{
-                if(index % 7 === 0){
-                  return [
-                    c[0] + (Math.random()-0.5)*0.0015,
-                    c[1] + (Math.random()-0.5)*0.0015
-                  ];
-                }
-                return c;
-              });
-            }
-          });
-        }
-
-        // ===== CAR =====
-        // prioritaskan jalan utama besar
-        else{
-          processedRoutes = processedRoutes
-            .sort((a,b)=> a.duration - b.duration)
-            .map((r,i)=>({
-              ...r,
-              priority:i,
-              routeType:i===0 ? 'car-main' : 'car-highway'
-            }))
-            .slice(0,3);
-
-          // mobil dibuat lebih smooth dan besar
-          processedRoutes.forEach((r,idx)=>{
-            if(idx !== 0 && r.geometry && r.geometry.coordinates){
-              r.geometry.coordinates = r.geometry.coordinates.filter((_,i)=> i % 2 === 0);
-            }
-          });
-        }
-
-        processedRoutes.forEach((route,index)=>{
-
-          const coordinates = route.geometry.coordinates.map(c => [c[1], c[0]]);
-
-          let dashArray = null;
-          let opacity = 0.42;
-          let weight = 5;
-          let color = '#7a7a7a';
-
-          // ===== MAIN ROUTE =====
-          if(index === 0){
-            opacity = 1;
-            weight = 7;
-            color = '#ff7a18';
+          if(!data.routes || !data.routes.length){
+            throw new Error('Route not found');
           }
 
-          // ===== WALKING STYLE =====
-          if(selectedTravelMode === 'walking'){
-            dashArray = '6,14';
-            opacity = index === 0 ? 1 : 0.35;
-            weight = index === 0 ? 5 : 3;
-            color = index === 0 ? '#ff7a18' : '#b0b0b0';
+          const route = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+
+          if(routingLine){
+            routingMap.removeLayer(routingLine);
           }
 
-          // ===== CYCLING STYLE =====
-          else if(selectedTravelMode === 'cycling'){
-            weight = index === 0 ? 6 : 4;
-            opacity = index === 0 ? 1 : 0.38;
-            color = index === 0 ? '#ff7a18' : '#8fa3b8';
-          }
-
-          // ===== MOTORCYCLE STYLE =====
-          else if(selectedTravelMode === 'motorcycle'){
-            weight = index === 0 ? 6 : 4;
-            opacity = index === 0 ? 1 : 0.3;
-            color = index === 0 ? '#ff7a18' : '#8d8d8d';
-
-            // visual lebih fleksibel
-            if(index !== 0){
-              dashArray = '14,8';
-            }
-          }
-
-          // ===== CAR STYLE =====
-          else{
-            weight = index === 0 ? 7 : 5;
-            opacity = index === 0 ? 1 : 0.4;
-            color = index === 0 ? '#ff7a18' : '#9d9d9d';
-          }
-
-          const polyline = L.polyline(coordinates,{
-            color,
-            weight,
-            opacity,
-            dashArray,
+          routingLine = L.polyline(route,{
+            color:'#ff7a18',
+            weight:7,
+            opacity:0.95,
             lineJoin:'round'
           }).addTo(routingMap);
 
-          if(index === 0){
-            routingLine = polyline;
-          }else{
-            routingAlternatives.push(polyline);
-          }
-        });
-
-        if(!window.routeInitialized){
           routingMap.fitBounds(routingLine.getBounds(),{
             padding:[70,70]
           });
-          window.routeInitialized = true;
-        }
 
-        const mainRoute = data.routes[0];
+          const distanceMeters = data.routes[0].distance;
+          const durationSeconds = data.routes[0].duration;
 
-        let durationSeconds = mainRoute.duration;
+          const km = (distanceMeters/1000).toFixed(2);
+          const minutes = Math.ceil(durationSeconds/60);
 
-        // ===== GOOGLE MAPS STYLE ETA =====
-        // realistic based on vehicle
+          document.getElementById('routeDistance').innerHTML = `
+            ${km} km remaining<br>
+            <span style="font-size:12px;font-weight:600;color:#9a8f82">
+              Estimated time ${minutes} min
+            </span>
+          `;
 
-        if(selectedTravelMode === 'walking'){
-          // 4-5 km/h
-          durationSeconds = mainRoute.distance / 1.15;
-        }
-        else if(selectedTravelMode === 'cycling'){
-          // 15-20 km/h
-          durationSeconds = mainRoute.distance / 4.8;
-        }
-        else if(selectedTravelMode === 'motorcycle'){
-          // motorcycle faster in small roads
-          durationSeconds = mainRoute.duration * 0.68;
-        }
-        else{
-          durationSeconds = mainRoute.duration;
-        }
+          // arrival detection
+          if(distanceMeters <= 25){
+            document.getElementById('routeDistance').innerHTML = `
+              ✅ Arrived at destination
+            `;
 
-        const minutes = Math.max(1, Math.ceil(durationSeconds / 60));
+            if(watchRouteId){
+              navigator.geolocation.clearWatch(watchRouteId);
+            }
+          }
 
-        if(minutes >= 60){
-          const hours = Math.floor(minutes / 60);
-          const remain = minutes % 60;
-          document.getElementById('routeDistance').innerHTML = `${hours} hr ${remain} min`;
-        }else{
-          document.getElementById('routeDistance').innerHTML = `${minutes} min`;
-        }
+        })
+        .catch(err => {
+          console.log(err);
 
-        if(mainRoute.distance <= 20){
-          document.getElementById('routeDistance').innerHTML = `Arrived`;
-        }
+          document.getElementById('routeDistance').innerHTML = `
+            Unable to calculate route
+          `;
+        });
 
-      }catch(err){
-        console.error('ROUTING ERROR:', err);
+      // auto fit route
+      routingMap.fitBounds(routingLine.getBounds(),{
+        padding:[60,60]
+      });
 
-        const routeDistance = document.getElementById('routeDistance');
+      // dynamic distance
+      const distance = routingMap.distance(
+        [userLat,userLng],
+        [selected.lat, selected.lng]
+      );
 
-        if(routeDistance){
-          routeDistance.innerHTML = 'Route unavailable';
+      const km = (distance/1000).toFixed(2);
+
+      document.getElementById('routeDistance').innerHTML = `
+        Fastest route active<br>
+        Remaining distance: <b>${km} km</b>
+      `;
+
+      // arrival detection
+      if(distance <= 25){
+        document.getElementById('routeDistance').innerHTML = `
+          ✅ You have arrived at <b>${selected.name}</b>
+        `;
+
+        if(watchRouteId){
+          navigator.geolocation.clearWatch(watchRouteId);
         }
       }
     }
 
     navigator.geolocation.getCurrentPosition((pos)=>{
       updateRoute(pos.coords.latitude, pos.coords.longitude);
-    });
-
-    watchRouteId = navigator.geolocation.watchPosition((pos)=>{
-      updateRoute(pos.coords.latitude, pos.coords.longitude);
-    },(err)=>{
-      console.log(err);
-    },{
-      enableHighAccuracy:true,
-      maximumAge:0,
-      timeout:10000
-    });
-
-    document.querySelectorAll('.travelModeBtn').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-
-        document.querySelectorAll('.travelModeBtn').forEach(b=>b.classList.remove('activeMode'));
-        btn.classList.add('activeMode');
-
-        selectedTravelMode = btn.dataset.mode;
-
-        navigator.geolocation.getCurrentPosition((pos)=>{
-          updateRoute(pos.coords.latitude, pos.coords.longitude);
-        });
-      });
     });
 
     // ===== MOBILE DRAGGABLE BOTTOM SHEET =====
@@ -2691,6 +2508,16 @@ window.startRoute = function(name){
       }
     });
 
+    watchRouteId = navigator.geolocation.watchPosition((pos)=>{
+      updateRoute(pos.coords.latitude, pos.coords.longitude);
+    },(err)=>{
+      console.log(err);
+    },{
+      enableHighAccuracy:true,
+      maximumAge:0,
+      timeout:10000
+    });
+
   },300);
 }
 
@@ -2702,6 +2529,9 @@ window.backToComap = function(){
   document.querySelectorAll('.nav-item')[1].click();
 }
 
+    addMarkers(aesthetic, aestheticLayer, 'red');
+    addMarkers(working, workingLayer, 'orange');
+    addMarkers(family, familyLayer, 'green');
     addMarkers(aesthetic, aestheticLayer, 'red');
     addMarkers(working, workingLayer, 'orange');
     addMarkers(family, familyLayer, 'green');
