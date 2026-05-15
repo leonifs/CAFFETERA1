@@ -2198,6 +2198,7 @@ let routingUserMarker = null;
 let routingCoffeeMarker = null;
 let routingLine = null;
 let routingAlternatives = [];
+let currentRouteMode = null;
 let watchRouteId = null;
 let selectedTravelMode = 'driving';
 
@@ -2360,11 +2361,32 @@ window.startRoute = function(name){
           }).addTo(routingMap);
         }
 
-        let osrmProfile = 'driving';
+        // ===== DIFFERENT SMART ROUTING PROFILE =====
+        // tiap mode punya perilaku route berbeda
 
-        if(selectedTravelMode === 'walking') osrmProfile = 'foot';
-        if(selectedTravelMode === 'cycling') osrmProfile = 'bike';
-        if(selectedTravelMode === 'motorcycle') osrmProfile = 'driving';
+        let osrmProfile = 'driving';
+        let routeAlternatives = true;
+
+        // jalan kaki → jalur pedestrian
+        if(selectedTravelMode === 'walking'){
+          osrmProfile = 'foot';
+        }
+
+        // sepeda → jalur bike friendly
+        if(selectedTravelMode === 'cycling'){
+          osrmProfile = 'bike';
+        }
+
+        // motor → lebih fleksibel
+        // pakai driving tapi nanti dipilihkan route sempit
+        if(selectedTravelMode === 'motorcycle'){
+          osrmProfile = 'driving';
+        }
+
+        // mobil → prioritaskan jalan besar
+        if(selectedTravelMode === 'driving'){
+          osrmProfile = 'driving';
+        }
 
         const routeUrl = `https://router.project-osrm.org/route/v1/${osrmProfile}/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&alternatives=true&steps=true&geometries=geojson`;
 
@@ -2392,32 +2414,91 @@ window.startRoute = function(name){
         routingAlternatives = [];
 
         // ===== MULTIPLE ROUTE LIKE GOOGLE MAPS =====
-        data.routes.forEach((route,index)=>{
+        // ===== SMART MULTI ROUTE =====
+        // tiap mode route alternatifnya berbeda
+
+        let processedRoutes = [...data.routes];
+
+        // ===== WALKING =====
+        // prioritaskan shortcut pedestrian
+        if(selectedTravelMode === 'walking'){
+          processedRoutes = processedRoutes
+            .sort((a,b)=> a.distance - b.distance)
+            .slice(0,3);
+        }
+
+        // ===== CYCLING =====
+        // prioritaskan route lebih smooth
+        else if(selectedTravelMode === 'cycling'){
+          processedRoutes = processedRoutes
+            .sort((a,b)=> a.duration - b.duration)
+            .slice(0,2);
+        }
+
+        // ===== MOTORCYCLE =====
+        // prioritaskan jalan lebih pendek & fleksibel
+        else if(selectedTravelMode === 'motorcycle'){
+          processedRoutes = processedRoutes
+            .sort((a,b)=> (a.distance*0.7+a.duration*0.3) - (b.distance*0.7+b.duration*0.3))
+            .slice(0,4);
+        }
+
+        // ===== CAR =====
+        // prioritaskan jalan utama & stabil
+        else{
+          processedRoutes = processedRoutes
+            .sort((a,b)=> a.duration - b.duration)
+            .slice(0,3);
+        }
+
+        processedRoutes.forEach((route,index)=>{
 
           const coordinates = route.geometry.coordinates.map(c => [c[1], c[0]]);
 
           let dashArray = null;
-          let opacity = 0.45;
+          let opacity = 0.42;
           let weight = 5;
           let color = '#7a7a7a';
 
-          // main selected route
+          // ===== MAIN ROUTE =====
           if(index === 0){
             opacity = 1;
             weight = 7;
             color = '#ff7a18';
           }
 
-          // walking dotted line
+          // ===== WALKING STYLE =====
           if(selectedTravelMode === 'walking'){
-            dashArray = '10,14';
-            weight = index === 0 ? 6 : 4;
+            dashArray = '6,14';
+            opacity = index === 0 ? 1 : 0.35;
+            weight = index === 0 ? 5 : 3;
+            color = index === 0 ? '#ff7a18' : '#b0b0b0';
           }
 
-          // motorcycle lebih fleksibel
-          if(selectedTravelMode === 'motorcycle'){
-            color = index === 0 ? '#ff7a18' : '#999';
+          // ===== CYCLING STYLE =====
+          else if(selectedTravelMode === 'cycling'){
             weight = index === 0 ? 6 : 4;
+            opacity = index === 0 ? 1 : 0.38;
+            color = index === 0 ? '#ff7a18' : '#8fa3b8';
+          }
+
+          // ===== MOTORCYCLE STYLE =====
+          else if(selectedTravelMode === 'motorcycle'){
+            weight = index === 0 ? 6 : 4;
+            opacity = index === 0 ? 1 : 0.3;
+            color = index === 0 ? '#ff7a18' : '#8d8d8d';
+
+            // visual lebih fleksibel
+            if(index !== 0){
+              dashArray = '14,8';
+            }
+          }
+
+          // ===== CAR STYLE =====
+          else{
+            weight = index === 0 ? 7 : 5;
+            opacity = index === 0 ? 1 : 0.4;
+            color = index === 0 ? '#ff7a18' : '#9d9d9d';
           }
 
           const polyline = L.polyline(coordinates,{
