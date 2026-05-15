@@ -2307,7 +2307,17 @@ window.startRoute = function(name){
 
   setTimeout(()=>{
 
-    routingMap = L.map('routeMap').setView([selected.lat, selected.lng], 15);
+    // FIX BUG: destroy map lama sebelum membuat map baru
+    if(routingMap){
+      routingMap.remove();
+      routingMap = null;
+    }
+
+    window.routeInitialized = false;
+
+    routingMap = L.map('routeMap',{
+      zoomControl:true
+    }).setView([selected.lat, selected.lng], 15);
 
     // GOOGLE MAP STYLE
     L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -2320,53 +2330,48 @@ window.startRoute = function(name){
       .bindPopup(selected.name)
       .openPopup();
 
-    function getProfile(mode){
-      // PROFILE BERBEDA SESUAI JENIS KENDARAAN
-      // sehingga ETA & route logic benar-benar berubah
-
-      if(mode === 'walking') return 'foot';
-      if(mode === 'cycling') return 'bike';
-
-      // motorcycle tetap driving road network
-      // tapi ETA dibedakan dengan speed factor
-      if(mode === 'motorcycle') return 'driving';
-
-      return 'driving';
+    function getGoogleTravelMode(mode){
+      // MODE ASLI GOOGLE MAPS DIRECTIONS API
+      if(mode === 'walking') return 'WALKING';
+      if(mode === 'cycling') return 'BICYCLING';
+      if(mode === 'motorcycle') return 'DRIVING';
+      return 'DRIVING';
     }
 
-    function getSpeedFactor(mode){
-      // semakin kecil factor = semakin cepat
-      // digunakan untuk simulasi realistic ETA
-
-      if(mode === 'walking') return 1.35;
-      if(mode === 'cycling') return 0.75;
-      if(mode === 'motorcycle') return 0.68;
-      if(mode === 'driving') return 1;
-
-      return 1;
+    function getMotorcycleAdjustment(duration){
+      // motor lebih cepat karena bisa selap-selip
+      return duration * 0.72;
     }
 
     async function updateRoute(userLat, userLng){
 
-      if(routingUserMarker){
-        routingUserMarker.setLatLng([userLat,userLng]);
-      }else{
-        routingUserMarker = L.circleMarker([userLat,userLng],{
-          radius:9,
-          fillColor:'#007bff',
-          color:'#fff',
-          weight:3,
-          fillOpacity:1
-        }).addTo(routingMap);
-      }
-
-      const profile = getProfile(selectedTravelMode);
-
-      const routeUrl = `https://router.project-osrm.org/route/v1/${profile}/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&geometries=geojson&steps=true`;
-
       try{
 
+        if(routingUserMarker){
+          routingUserMarker.setLatLng([userLat,userLng]);
+        }else{
+          routingUserMarker = L.circleMarker([userLat,userLng],{
+            radius:9,
+            fillColor:'#007bff',
+            color:'#fff',
+            weight:3,
+            fillOpacity:1
+          }).addTo(routingMap);
+        }
+
+        let osrmProfile = 'driving';
+
+        if(selectedTravelMode === 'walking') osrmProfile = 'foot';
+        if(selectedTravelMode === 'cycling') osrmProfile = 'bike';
+
+        const routeUrl = `https://router.project-osrm.org/route/v1/${osrmProfile}/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&geometries=geojson&steps=true`;
+
         const response = await fetch(routeUrl);
+
+        if(!response.ok){
+          throw new Error('Failed routing request');
+        }
+
         const data = await response.json();
 
         if(!data.routes || !data.routes.length){
@@ -2374,6 +2379,7 @@ window.startRoute = function(name){
         }
 
         const route = data.routes[0];
+
         const coordinates = route.geometry.coordinates.map(c => [c[1], c[0]]);
 
         if(routingLine){
@@ -2387,29 +2393,50 @@ window.startRoute = function(name){
           lineJoin:'round'
         }).addTo(routingMap);
 
-        routingMap.fitBounds(routingLine.getBounds(),{
-          padding:[70,70]
-        });
+        if(!window.routeInitialized){
+          routingMap.fitBounds(routingLine.getBounds(),{
+            padding:[70,70]
+          });
+          window.routeInitialized = true;
+        }
 
-        // ===== REALISTIC ETA BASED ON VEHICLE TYPE =====
-        // OSRM default = mobil
-        // lalu disesuaikan speed factor tiap kendaraan
+        let durationSeconds = route.duration;
 
-        const speedFactor = getSpeedFactor(selectedTravelMode);
+        // WALKING
+        if(selectedTravelMode === 'walking'){
+          durationSeconds = route.distance / 1.2;
+        }
+        // CYCLING
+        else if(selectedTravelMode === 'cycling'){
+          durationSeconds = route.distance / 4.5;
+        }
+        // MOTORCYCLE
+        else if(selectedTravelMode === 'motorcycle'){
+          durationSeconds = route.duration * 0.72;
+        }
 
-        const adjustedDuration = route.duration * speedFactor;
+        const minutes = Math.max(1, Math.ceil(durationSeconds / 60));
 
-        const minutes = Math.ceil(adjustedDuration / 60);
+        if(minutes >= 60){
+          const hours = Math.floor(minutes / 60);
+          const remain = minutes % 60;
+          document.getElementById('routeDistance').innerHTML = `${hours} hr ${remain} min`;
+        }else{
+          document.getElementById('routeDistance').innerHTML = `${minutes} min`;
+        }
 
-        document.getElementById('routeDistance').innerHTML = `${minutes} min`;
-
-        if(route.distance <= 25){
+        if(route.distance <= 20){
           document.getElementById('routeDistance').innerHTML = `Arrived`;
         }
 
       }catch(err){
-        console.log(err);
-        document.getElementById('routeDistance').innerHTML = `Route unavailable`;
+        console.error('ROUTING ERROR:', err);
+
+        const routeDistance = document.getElementById('routeDistance');
+
+        if(routeDistance){
+          routeDistance.innerHTML = 'Route unavailable';
+        }
       }
     }
 
@@ -2501,9 +2528,6 @@ window.backToComap = function(){
   document.querySelectorAll('.nav-item')[1].click();
 }
 
-    addMarkers(aesthetic, aestheticLayer, 'red');
-    addMarkers(working, workingLayer, 'orange');
-    addMarkers(family, familyLayer, 'green');
     addMarkers(aesthetic, aestheticLayer, 'red');
     addMarkers(working, workingLayer, 'orange');
     addMarkers(family, familyLayer, 'green');
