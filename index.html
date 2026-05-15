@@ -1595,6 +1595,12 @@ homeBtn.addEventListener('click', (e)=>{
 
 document.querySelectorAll('.top-link').forEach(link=>{
   link.addEventListener('click', function(e){
+
+    // hide contact section ketika buka TOP 10
+    const contactSection = document.getElementById('contactSection');
+    if(contactSection){
+      contactSection.style.display = 'none';
+    }
     
     const mini = document.querySelector('.map-list-section');
     if(mini) mini.style.display = 'none';
