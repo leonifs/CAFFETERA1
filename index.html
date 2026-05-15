@@ -477,7 +477,12 @@
       #legendBox{
         min-width: 170px !important;
         max-width: 170px !important;
-        padding:10px 11px !important;
+        max-height: 128px !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        scroll-behavior: smooth !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding:12px 12px !important;
         bottom:12px !important;
         right:12px !important;
         border-radius:14px !important;
@@ -501,6 +506,19 @@
 
       #legendBox div{
         font-size:11px;
+      }
+
+      #legendBox::-webkit-scrollbar{
+        width:4px;
+      }
+
+      #legendBox::-webkit-scrollbar-thumb{
+        background:#ffb27a;
+        border-radius:999px;
+      }
+
+      #legendBox::-webkit-scrollbar-track{
+        background:transparent;
       }
     }
   </style>
@@ -1858,7 +1876,39 @@ mapBtn.addEventListener('click', function(e){
             Showing coffee shop with rating ≥ <span id="ratingValue" style="color:#ff7a18;font-weight:700">1.0</span>
           </div>
         </div>
+
+        <!-- DISTANCE FILTER -->
+        <div style="margin-top:18px;padding-top:14px;border-top:1px solid #eee">
+
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="font-weight:600;color:#ff7a18;font-size:13px;letter-spacing:1px">DISTANCE</div>
+            </div>
+
+            <label style="display:flex;align-items:center;cursor:pointer">
+              <input type="checkbox" id="distanceToggle" checked style="width:16px;height:16px;accent-color:#ff7a18;cursor:pointer">
+            </label>
+          </div>
+
+          <input 
+            type="range" 
+            id="distanceSlider"
+            min="100"
+            max="1000"
+            step="100"
+            value="1000"
+            style="width:100%;accent-color:#ff7a18;cursor:pointer"
+          >
+
+          <div style="margin-top:8px;font-size:11px;color:#777;text-align:center">
+            Buffer radius <span id="distanceValue" style="color:#ff7a18;font-weight:700">1000 m</span>
+          </div>
+
+        </div>
       </div>
+    </div>
+  </div>
 
     </div>
   `;
@@ -1870,7 +1920,7 @@ mapBtn.addEventListener('click', function(e){
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
-    // ===== USER LOCATION & 500M BUFFER =====
+    // ===== USER LOCATION & FLEXIBLE BUFFER =====
     let userMarker = null;
     let userBuffer = null;
 
@@ -1890,7 +1940,7 @@ mapBtn.addEventListener('click', function(e){
           }).addTo(map)
           .bindPopup('Your Location');
 
-          // buffer 500 meter
+          // flexible buffer
           userBuffer = L.circle([lat,lng],{
             radius:1000,
             color:'red',
@@ -2491,6 +2541,42 @@ window.backToComap = function(){
     addMarkers(working, workingLayer, 'orange');
     addMarkers(family, familyLayer, 'green');
     addMarkers(romantic, romanticLayer, 'pink');
+
+    // ===== DISTANCE BUFFER CONTROL =====
+    const distanceToggle = document.getElementById('distanceToggle');
+    const distanceSlider = document.getElementById('distanceSlider');
+    const distanceValue = document.getElementById('distanceValue');
+
+    distanceToggle.addEventListener('change',()=>{
+
+      if(!userBuffer) return;
+
+      if(distanceToggle.checked){
+        map.addLayer(userBuffer);
+      }else{
+        map.removeLayer(userBuffer);
+      }
+    });
+
+    distanceSlider.addEventListener('input',()=>{
+
+      const radius = parseInt(distanceSlider.value);
+
+      distanceValue.innerHTML = `${radius} m`;
+
+      if(userBuffer){
+        userBuffer.setRadius(radius);
+
+        if(distanceToggle.checked && !map.hasLayer(userBuffer)){
+          map.addLayer(userBuffer);
+        }
+      }
+    });
+
+    // default visible karena checkbox aktif
+    if(userBuffer && distanceToggle.checked){
+      map.addLayer(userBuffer);
+    }
 
     // ===== RATING FILTER =====
     const ratingSlider = document.getElementById('ratingSlider');
