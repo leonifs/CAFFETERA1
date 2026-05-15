@@ -477,12 +477,7 @@
       #legendBox{
         min-width: 170px !important;
         max-width: 170px !important;
-        max-height: 128px !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        scroll-behavior: smooth !important;
-        -webkit-overflow-scrolling: touch !important;
-        padding:12px 12px !important;
+        padding:10px 11px !important;
         bottom:12px !important;
         right:12px !important;
         border-radius:14px !important;
@@ -506,19 +501,6 @@
 
       #legendBox div{
         font-size:11px;
-      }
-
-      #legendBox::-webkit-scrollbar{
-        width:4px;
-      }
-
-      #legendBox::-webkit-scrollbar-thumb{
-        background:#ffb27a;
-        border-radius:999px;
-      }
-
-      #legendBox::-webkit-scrollbar-track{
-        background:transparent;
       }
     }
   </style>
@@ -1595,12 +1577,6 @@ homeBtn.addEventListener('click', (e)=>{
 
 document.querySelectorAll('.top-link').forEach(link=>{
   link.addEventListener('click', function(e){
-
-    // hide contact section ketika buka TOP 10
-    const contactSection = document.getElementById('contactSection');
-    if(contactSection){
-      contactSection.style.display = 'none';
-    }
     
     const mini = document.querySelector('.map-list-section');
     if(mini) mini.style.display = 'none';
@@ -2286,19 +2262,21 @@ window.startRoute = function(name){
 
           <div style="padding:16px 18px 18px;background:linear-gradient(135deg,#ff9f43,#ff7a18);position:relative">
 
-            
+            <div style="position:absolute;right:22px;top:18px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-size:22px;backdrop-filter:blur(10px)">
+              ☕
+            </div>
 
             <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.85);font-weight:700">
               LIVE NAVIGATION
             </div>
 
-            <div style="margin-top:10px;font-size:clamp(22px,5vw,34px);line-height:0.95;font-family:'Bebas Neue';letter-spacing:2px;color:white;max-width:70%">
+            <div style="margin-top:10px;font-size:clamp(22px,5vw,34px);line-height:0.95;font-family:'Bebas Neue';letter-spacing:2px;color:white;max-width:85%">
               ${selected.name}
             </div>
 
-            <div style="position:absolute;right:20px;top:34px;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:6px;color:white;font-weight:600;font-size:10px;letter-spacing:1px;text-align:right">
-              <span style="width:12px;height:12px;border-radius:50%;background:#00ff99;display:block;box-shadow:0 0 12px #00ff99"></span>
-              <span>GPS CONNECTED</span>
+            <div style="margin-top:12px;display:flex;align-items:center;gap:8px;color:white;font-weight:600;font-size:11px">
+              <span style="width:12px;height:12px;border-radius:50%;background:#00ff99;display:inline-block;box-shadow:0 0 12px #00ff99"></span>
+              GPS CONNECTED
             </div>
           </div>
 
@@ -2320,7 +2298,9 @@ window.startRoute = function(name){
                 </div>
               </div>
 
-              
+              <div style="width:56px;height:56px;border-radius:24px;background:linear-gradient(135deg,#fff7ef,#ffe3c8);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,122,24,0.08)">
+                <span style="font-size:30px">🕒</span>
+              </div>
 
             </div>
 
