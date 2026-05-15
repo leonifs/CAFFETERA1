@@ -2198,6 +2198,8 @@ let routingUserMarker = null;
 let routingCoffeeMarker = null;
 let routingLine = null;
 let watchRouteId = null;
+let routeInitialized = false;
+let userInteractingWithMap = false;
 
 window.startRoute = function(name){
 
@@ -2255,39 +2257,23 @@ window.startRoute = function(name){
                   ROUTE STATUS
                 </div>
 
-                <div id="routeDistance" style="font-size:15px;font-weight:700;line-height:1.35">
-                  Calculating fastest route...
+                <div id="routeDistance" style="font-size:22px;font-weight:700;line-height:1.2;color:#2b2b2b">
+                  Calculating...
+                </div>
+
+                <div id="routeEta" style="margin-top:4px;font-size:11px;font-weight:600;color:#9a8f82;letter-spacing:1px">
+                  Estimating travel time...
                 </div>
               </div>
 
               <div style="width:56px;height:56px;border-radius:24px;background:linear-gradient(135deg,#fff7ef,#ffe3c8);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,122,24,0.08)">
-                <span style="font-size:30px">🧭</span>
+                <span style="font-size:30px">🕒</span>
               </div>
 
-            </div>
-
-            <div style="margin-top:16px;background:#fff7ef;border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,0.05)">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-
-                <div>
-                  <div style="font-size:11px;color:#9a8f82;letter-spacing:2px">
-                    NAVIGATION MODE
-                  </div>
-
-                  <div style="margin-top:6px;font-size:13px;font-weight:600">
-                    Fastest Route Active
-                  </div>
-                </div>
-
-                <div style="padding:7px 14px;background:#ff8d32;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1px">
-                  LIVE
-                </div>
-
-              </div>
             </div>
 
             <button onclick="backToComap()" style="margin-top:18px;width:100%;border:none;background:linear-gradient(135deg,#ff9f43,#ff7a18);color:white;padding:14px;border-radius:16px;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;box-shadow:0 10px 30px rgba(255,122,24,0.3)">
-              ← BACK TO CO-MAP
+              BACK TO CO-MAP
             </button>
 
           </div>
@@ -2334,7 +2320,18 @@ window.startRoute = function(name){
 
   setTimeout(()=>{
 
-    routingMap = L.map('routeMap').setView([selected.lat, selected.lng], 15);
+    routingMap = L.map('routeMap',{
+      zoomControl:true,
+      scrollWheelZoom:true,
+      doubleClickZoom:true,
+      touchZoom:true,
+      boxZoom:true
+    }).setView([selected.lat, selected.lng], 15);
+
+    // DETECT USER MANUAL MAP INTERACTION
+    routingMap.on('zoomstart dragstart movestart',()=>{
+      userInteractingWithMap = true;
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:'&copy; OpenStreetMap'
@@ -2388,9 +2385,18 @@ window.startRoute = function(name){
             lineJoin:'round'
           }).addTo(routingMap);
 
-          routingMap.fitBounds(routingLine.getBounds(),{
-            padding:[70,70]
-          });
+          // AUTO FIT ONLY FIRST TIME
+          // supaya zoom user tidak mental balik
+          if(!routeInitialized && !userInteractingWithMap){
+            routingMap.fitBounds(routingLine.getBounds(),{
+              padding:[70,70],
+              maxZoom:16,
+              animate:true,
+              duration:1.2
+            });
+
+            routeInitialized = true;
+          }
 
           const distanceMeters = data.routes[0].distance;
           const durationSeconds = data.routes[0].duration;
@@ -2398,12 +2404,9 @@ window.startRoute = function(name){
           const km = (distanceMeters/1000).toFixed(2);
           const minutes = Math.ceil(durationSeconds/60);
 
-          document.getElementById('routeDistance').innerHTML = `
-            ${km} km remaining<br>
-            <span style="font-size:12px;font-weight:600;color:#9a8f82">
-              Estimated time ${minutes} min
-            </span>
-          `;
+          document.getElementById('routeDistance').innerHTML = `${km} km`;
+
+          document.getElementById('routeEta').innerHTML = `Estimated time ${minutes} min`;
 
           // arrival detection
           if(distanceMeters <= 25){
@@ -2425,10 +2428,8 @@ window.startRoute = function(name){
           `;
         });
 
-      // auto fit route
-      routingMap.fitBounds(routingLine.getBounds(),{
-        padding:[60,60]
-      });
+      // REMOVED AUTO FIT CONTINUOUS
+      // supaya user bisa zoom in detail belokan tanpa mental balik
 
       // dynamic distance
       const distance = routingMap.distance(
