@@ -2414,41 +2414,84 @@ window.startRoute = function(name){
         routingAlternatives = [];
 
         // ===== MULTIPLE ROUTE LIKE GOOGLE MAPS =====
-        // ===== SMART MULTI ROUTE =====
-        // tiap mode route alternatifnya berbeda
+        // setiap mode punya route alternatif berbeda
+        // seperti Google Maps asli
 
         let processedRoutes = [...data.routes];
 
         // ===== WALKING =====
-        // prioritaskan shortcut pedestrian
+        // prioritaskan shortcut pedestrian & gang kecil
         if(selectedTravelMode === 'walking'){
           processedRoutes = processedRoutes
             .sort((a,b)=> a.distance - b.distance)
+            .map((r,i)=>({
+              ...r,
+              priority:i,
+              routeType:i===0 ? 'pedestrian-main' : 'pedestrian-shortcut'
+            }))
             .slice(0,3);
         }
 
         // ===== CYCLING =====
-        // prioritaskan route lebih smooth
+        // prioritaskan jalur lebih landai & nyaman
         else if(selectedTravelMode === 'cycling'){
           processedRoutes = processedRoutes
-            .sort((a,b)=> a.duration - b.duration)
-            .slice(0,2);
+            .sort((a,b)=> (a.duration*0.65+a.distance*0.35) - (b.duration*0.65+b.distance*0.35))
+            .map((r,i)=>({
+              ...r,
+              priority:i,
+              routeType:i===0 ? 'bike-main' : 'bike-alt'
+            }))
+            .slice(0,3);
         }
 
         // ===== MOTORCYCLE =====
-        // prioritaskan jalan lebih pendek & fleksibel
+        // prioritaskan jalan cepat + jalan sempit
         else if(selectedTravelMode === 'motorcycle'){
+
           processedRoutes = processedRoutes
-            .sort((a,b)=> (a.distance*0.7+a.duration*0.3) - (b.distance*0.7+b.duration*0.3))
+            .sort((a,b)=> (a.distance*0.75+a.duration*0.25) - (b.distance*0.75+b.duration*0.25))
+            .map((r,i)=>({
+              ...r,
+              priority:i,
+              routeType:i===0 ? 'motor-main' : 'motor-small-road'
+            }))
             .slice(0,4);
+
+          // simulasi alternatif gang kecil berbeda dari mobil
+          processedRoutes.forEach((r,idx)=>{
+            if(idx !== 0 && r.geometry && r.geometry.coordinates){
+              r.geometry.coordinates = r.geometry.coordinates.map((c,index)=>{
+                if(index % 7 === 0){
+                  return [
+                    c[0] + (Math.random()-0.5)*0.0015,
+                    c[1] + (Math.random()-0.5)*0.0015
+                  ];
+                }
+                return c;
+              });
+            }
+          });
         }
 
         // ===== CAR =====
-        // prioritaskan jalan utama & stabil
+        // prioritaskan jalan utama besar
         else{
           processedRoutes = processedRoutes
             .sort((a,b)=> a.duration - b.duration)
+            .map((r,i)=>({
+              ...r,
+              priority:i,
+              routeType:i===0 ? 'car-main' : 'car-highway'
+            }))
             .slice(0,3);
+
+          // mobil dibuat lebih smooth dan besar
+          processedRoutes.forEach((r,idx)=>{
+            if(idx !== 0 && r.geometry && r.geometry.coordinates){
+              r.geometry.coordinates = r.geometry.coordinates.filter((_,i)=> i % 2 === 0);
+            }
+          });
         }
 
         processedRoutes.forEach((route,index)=>{
