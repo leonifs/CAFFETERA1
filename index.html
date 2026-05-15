@@ -1837,6 +1837,51 @@ mapBtn.addEventListener('click', function(e){
       attribution: '&copy; OpenStreetMap'
     }).addTo(map);
 
+    // ===== USER LOCATION & 500M BUFFER =====
+    let userMarker = null;
+    let userBuffer = null;
+
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        (position)=>{
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          // marker lokasi user
+          userMarker = L.circleMarker([lat,lng],{
+            radius:8,
+            fillColor:'#ff7a18',
+            color:'#ffffff',
+            weight:2,
+            fillOpacity:1
+          }).addTo(map)
+          .bindPopup('Your Location');
+
+          // buffer 500 meter
+          userBuffer = L.circle([lat,lng],{
+            radius:500,
+            color:'red',
+            weight:1.2,
+            fillColor:'#ff0000',
+            fillOpacity:0.08
+          }).addTo(map);
+
+          // fokus ke lokasi user
+          map.flyTo([lat,lng],15,{
+            duration:2
+          });
+        },
+        (error)=>{
+          console.log('Lokasi perangkat tidak diizinkan', error);
+        },
+        {
+          enableHighAccuracy:true,
+          timeout:10000,
+          maximumAge:0
+        }
+      );
+    }
+
     
     fetch('https://raw.githubusercontent.com/leonifs/COFFETERA/main/YOGYAKARTA.json')
       .then(res => res.json())
