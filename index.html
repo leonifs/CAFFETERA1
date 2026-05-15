@@ -592,8 +592,16 @@
     </div>
 
     
-    <div class="coffee-list" id="coffeeList">
-      
+    <div class="coffee-list-wrapper">
+
+      <div class="coffee-search">
+        <input type="text" id="coffeeSearch" placeholder="Search coffee place...">
+        <button id="searchBtn">⌕</button>
+      </div>
+
+      <div class="coffee-list" id="coffeeList">
+      </div>
+
     </div>
 
   </div>
@@ -630,6 +638,57 @@
   width:100%;
   height:500px;
   border-radius:15px;
+}
+
+.coffee-list-wrapper{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.coffee-search{
+  display:flex;
+  align-items:center;
+  background:rgba(255,255,255,0.95);
+  border-radius:14px;
+  padding:8px 10px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  gap:8px;
+}
+
+.coffee-search input{
+  flex:1;
+  border:none;
+  outline:none;
+  background:transparent;
+  font-size:12px;
+  letter-spacing:0.5px;
+  color:#444;
+  font-family:'Montserrat',sans-serif;
+}
+
+.coffee-search input::placeholder{
+  color:#999;
+}
+
+#searchBtn{
+  width:30px;
+  height:30px;
+  border:none;
+  border-radius:50%;
+  background:#ff7a18;
+  color:#fff;
+  cursor:pointer;
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:0.3s ease;
+}
+
+#searchBtn:hover{
+  transform:scale(1.08);
+  box-shadow:0 4px 10px rgba(255,122,24,0.35);
 }
 
 .coffee-list{
@@ -822,6 +881,28 @@ window.generateReviews = function(name){
   renderCategory(working,'orange');
   renderCategory(family,'green');
   renderCategory(romantic,'pink');
+
+
+const coffeeSearch = document.getElementById('coffeeSearch');
+const searchBtn = document.getElementById('searchBtn');
+
+function filterCoffee(){
+  const keyword = coffeeSearch.value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.coffee-card');
+
+  cards.forEach(card=>{
+    const name = card.querySelector('.coffee-name').innerText.toLowerCase();
+
+    if(name.includes(keyword)){
+      card.style.display = 'block';
+    }else{
+      card.style.display = 'none';
+    }
+  });
+}
+
+coffeeSearch.addEventListener('keyup', filterCoffee);
+searchBtn.addEventListener('click', filterCoffee);
 
   
   const btn = document.createElement('button');
