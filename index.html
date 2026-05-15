@@ -2197,6 +2197,7 @@ let routingMap = null;
 let routingUserMarker = null;
 let routingCoffeeMarker = null;
 let routingLine = null;
+let routingAlternatives = [];
 let watchRouteId = null;
 let selectedTravelMode = 'driving';
 
@@ -2363,8 +2364,9 @@ window.startRoute = function(name){
 
         if(selectedTravelMode === 'walking') osrmProfile = 'foot';
         if(selectedTravelMode === 'cycling') osrmProfile = 'bike';
+        if(selectedTravelMode === 'motorcycle') osrmProfile = 'driving';
 
-        const routeUrl = `https://router.project-osrm.org/route/v1/${osrmProfile}/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&geometries=geojson&steps=true`;
+        const routeUrl = `https://router.project-osrm.org/route/v1/${osrmProfile}/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&alternatives=true&steps=true&geometries=geojson`;
 
         const response = await fetch(routeUrl);
 
@@ -2378,20 +2380,60 @@ window.startRoute = function(name){
           throw new Error('Route not found');
         }
 
-        const route = data.routes[0];
-
-        const coordinates = route.geometry.coordinates.map(c => [c[1], c[0]]);
-
+        // hapus route lama
         if(routingLine){
           routingMap.removeLayer(routingLine);
         }
 
-        routingLine = L.polyline(coordinates,{
-          color:'#ff7a18',
-          weight:7,
-          opacity:0.95,
-          lineJoin:'round'
-        }).addTo(routingMap);
+        routingAlternatives.forEach(line=>{
+          routingMap.removeLayer(line);
+        });
+
+        routingAlternatives = [];
+
+        // ===== MULTIPLE ROUTE LIKE GOOGLE MAPS =====
+        data.routes.forEach((route,index)=>{
+
+          const coordinates = route.geometry.coordinates.map(c => [c[1], c[0]]);
+
+          let dashArray = null;
+          let opacity = 0.45;
+          let weight = 5;
+          let color = '#7a7a7a';
+
+          // main selected route
+          if(index === 0){
+            opacity = 1;
+            weight = 7;
+            color = '#ff7a18';
+          }
+
+          // walking dotted line
+          if(selectedTravelMode === 'walking'){
+            dashArray = '10,14';
+            weight = index === 0 ? 6 : 4;
+          }
+
+          // motorcycle lebih fleksibel
+          if(selectedTravelMode === 'motorcycle'){
+            color = index === 0 ? '#ff7a18' : '#999';
+            weight = index === 0 ? 6 : 4;
+          }
+
+          const polyline = L.polyline(coordinates,{
+            color,
+            weight,
+            opacity,
+            dashArray,
+            lineJoin:'round'
+          }).addTo(routingMap);
+
+          if(index === 0){
+            routingLine = polyline;
+          }else{
+            routingAlternatives.push(polyline);
+          }
+        });
 
         if(!window.routeInitialized){
           routingMap.fitBounds(routingLine.getBounds(),{
@@ -2400,19 +2442,27 @@ window.startRoute = function(name){
           window.routeInitialized = true;
         }
 
-        let durationSeconds = route.duration;
+        const mainRoute = data.routes[0];
 
-        // WALKING
+        let durationSeconds = mainRoute.duration;
+
+        // ===== GOOGLE MAPS STYLE ETA =====
+        // realistic based on vehicle
+
         if(selectedTravelMode === 'walking'){
-          durationSeconds = route.distance / 1.2;
+          // 4-5 km/h
+          durationSeconds = mainRoute.distance / 1.15;
         }
-        // CYCLING
         else if(selectedTravelMode === 'cycling'){
-          durationSeconds = route.distance / 4.5;
+          // 15-20 km/h
+          durationSeconds = mainRoute.distance / 4.8;
         }
-        // MOTORCYCLE
         else if(selectedTravelMode === 'motorcycle'){
-          durationSeconds = route.duration * 0.72;
+          // motorcycle faster in small roads
+          durationSeconds = mainRoute.duration * 0.68;
+        }
+        else{
+          durationSeconds = mainRoute.duration;
         }
 
         const minutes = Math.max(1, Math.ceil(durationSeconds / 60));
@@ -2425,7 +2475,7 @@ window.startRoute = function(name){
           document.getElementById('routeDistance').innerHTML = `${minutes} min`;
         }
 
-        if(route.distance <= 20){
+        if(mainRoute.distance <= 20){
           document.getElementById('routeDistance').innerHTML = `Arrived`;
         }
 
