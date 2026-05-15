@@ -2321,9 +2321,29 @@ window.startRoute = function(name){
       .openPopup();
 
     function getProfile(mode){
+      // PROFILE BERBEDA SESUAI JENIS KENDARAAN
+      // sehingga ETA & route logic benar-benar berubah
+
       if(mode === 'walking') return 'foot';
       if(mode === 'cycling') return 'bike';
+
+      // motorcycle tetap driving road network
+      // tapi ETA dibedakan dengan speed factor
+      if(mode === 'motorcycle') return 'driving';
+
       return 'driving';
+    }
+
+    function getSpeedFactor(mode){
+      // semakin kecil factor = semakin cepat
+      // digunakan untuk simulasi realistic ETA
+
+      if(mode === 'walking') return 1.35;
+      if(mode === 'cycling') return 0.75;
+      if(mode === 'motorcycle') return 0.68;
+      if(mode === 'driving') return 1;
+
+      return 1;
     }
 
     async function updateRoute(userLat, userLng){
@@ -2371,7 +2391,15 @@ window.startRoute = function(name){
           padding:[70,70]
         });
 
-        const minutes = Math.ceil(route.duration / 60);
+        // ===== REALISTIC ETA BASED ON VEHICLE TYPE =====
+        // OSRM default = mobil
+        // lalu disesuaikan speed factor tiap kendaraan
+
+        const speedFactor = getSpeedFactor(selectedTravelMode);
+
+        const adjustedDuration = route.duration * speedFactor;
+
+        const minutes = Math.ceil(adjustedDuration / 60);
 
         document.getElementById('routeDistance').innerHTML = `${minutes} min`;
 
