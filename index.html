@@ -670,6 +670,26 @@
 
 @media(max-width:900px){
   .map-list-container{grid-template-columns:1fr}
+
+  .coffee-list{
+    max-height:420px !important;
+    overflow-y:auto !important;
+    padding-right:4px;
+    scroll-behavior:smooth;
+  }
+
+  .coffee-list::-webkit-scrollbar{
+    width:5px;
+  }
+
+  .coffee-list::-webkit-scrollbar-thumb{
+    background:#ffb27a;
+    border-radius:10px;
+  }
+
+  .coffee-card{
+    flex-shrink:0;
+  }
 }
 </style>
 
@@ -1349,7 +1369,9 @@ if(document.readyState === 'loading'){
   }
 
   .coffee-list{
-    max-height:none;
+    max-height:420px !important;
+    overflow-y:auto !important;
+    padding-right:4px;
   }
 
   .coffee-card{
