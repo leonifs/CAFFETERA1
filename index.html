@@ -2198,6 +2198,7 @@ let routingUserMarker = null;
 let routingCoffeeMarker = null;
 let routingLine = null;
 let watchRouteId = null;
+let selectedTravelMode = 'driving';
 
 window.startRoute = function(name){
 
@@ -2255,8 +2256,8 @@ window.startRoute = function(name){
                   ROUTE STATUS
                 </div>
 
-                <div id="routeDistance" style="font-size:15px;font-weight:700;line-height:1.35">
-                  Calculating fastest route...
+                <div id="routeDistance" style="font-size:24px;font-weight:700;line-height:1.2">
+                  Calculating...
                 </div>
               </div>
 
@@ -2267,22 +2268,11 @@ window.startRoute = function(name){
             </div>
 
             <div style="margin-top:16px;background:#fff7ef;border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,0.05)">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-
-                <div>
-                  <div style="font-size:11px;color:#9a8f82;letter-spacing:2px">
-                    NAVIGATION MODE
-                  </div>
-
-                  <div style="margin-top:6px;font-size:13px;font-weight:600">
-                    Fastest Route Active
-                  </div>
-                </div>
-
-                <div style="padding:7px 14px;background:#ff8d32;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1px">
-                  LIVE
-                </div>
-
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+                <button class="travelModeBtn activeMode" data-mode="driving">🚗</button>
+                <button class="travelModeBtn" data-mode="motorcycle">🏍️</button>
+                <button class="travelModeBtn" data-mode="cycling">🚲</button>
+                <button class="travelModeBtn" data-mode="walking">🚶</button>
               </div>
             </div>
 
@@ -2295,40 +2285,23 @@ window.startRoute = function(name){
         </div>
       </div>
 
-        <div style="padding:24px;background:#161616;color:white">
+      <style>
+        .travelModeBtn{
+          width:54px;
+          height:54px;
+          border:none;
+          border-radius:18px;
+          background:#f1e4d6;
+          font-size:24px;
+          cursor:pointer;
+          transition:0.25s ease;
+        }
 
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
-            <div>
-              <div style="font-size:11px;letter-spacing:2px;color:#9a8f82">ROUTE STATUS</div>
-              <div id="routeDistance" style="margin-top:6px;font-size:17px;font-weight:700;color:#fff">
-                Calculating fastest route...
-              </div>
-            </div>
-
-            <div style="width:64px;height:64px;border-radius:22px;background:linear-gradient(135deg,#2d2d2d,#1d1d1d);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06)">
-              <span style="font-size:28px">🧭</span>
-            </div>
-          </div>
-
-          <div style="background:#202020;border-radius:20px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.05)">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <div style="font-size:11px;color:#9a8f82;letter-spacing:2px">NAVIGATION MODE</div>
-                <div style="margin-top:4px;font-size:15px;font-weight:700">Fastest Route Active</div>
-              </div>
-
-              <div style="padding:8px 14px;background:#00c853;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:1px">
-                LIVE
-              </div>
-            </div>
-          </div>
-
-          <button onclick="backToComap()" style="width:100%;border:none;background:linear-gradient(135deg,#ff7a18,#ff9f43);color:white;padding:16px;border-radius:18px;font-weight:800;cursor:pointer;font-size:14px;letter-spacing:1px;box-shadow:0 10px 30px rgba(255,122,24,0.35)">
-            ← BACK TO CO-MAP
-          </button>
-
-        </div>
-      </div>
+        .travelModeBtn.activeMode{
+          background:#ff7a18;
+          transform:scale(1.06);
+        }
+      </style>
     </div>
   `;
 
@@ -2336,8 +2309,10 @@ window.startRoute = function(name){
 
     routingMap = L.map('routeMap').setView([selected.lat, selected.lng], 15);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:'&copy; OpenStreetMap'
+    // GOOGLE MAP STYLE
+    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      maxZoom:20,
+      subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(routingMap);
 
     routingCoffeeMarker = L.marker([selected.lat, selected.lng])
@@ -2345,12 +2320,13 @@ window.startRoute = function(name){
       .bindPopup(selected.name)
       .openPopup();
 
-    if(!navigator.geolocation){
-      alert('Geolocation tidak didukung browser');
-      return;
+    function getProfile(mode){
+      if(mode === 'walking') return 'foot';
+      if(mode === 'cycling') return 'bike';
+      return 'driving';
     }
 
-    function updateRoute(userLat, userLng){
+    async function updateRoute(userLat, userLng){
 
       if(routingUserMarker){
         routingUserMarker.setLatLng([userLat,userLng]);
@@ -2361,102 +2337,80 @@ window.startRoute = function(name){
           color:'#fff',
           weight:3,
           fillOpacity:1
-        }).addTo(routingMap).bindPopup('Your Location');
+        }).addTo(routingMap);
       }
 
-      // ===== REAL ROAD NETWORK ROUTING =====
-      const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&geometries=geojson`;
+      const profile = getProfile(selectedTravelMode);
 
-      fetch(osrmUrl)
-        .then(res => res.json())
-        .then(data => {
+      const routeUrl = `https://router.project-osrm.org/route/v1/${profile}/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&geometries=geojson&steps=true`;
 
-          if(!data.routes || !data.routes.length){
-            throw new Error('Route not found');
-          }
+      try{
 
-          const route = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+        const response = await fetch(routeUrl);
+        const data = await response.json();
 
-          if(routingLine){
-            routingMap.removeLayer(routingLine);
-          }
+        if(!data.routes || !data.routes.length){
+          throw new Error('Route not found');
+        }
 
-          routingLine = L.polyline(route,{
-            color:'#ff7a18',
-            weight:7,
-            opacity:0.95,
-            lineJoin:'round'
-          }).addTo(routingMap);
+        const route = data.routes[0];
+        const coordinates = route.geometry.coordinates.map(c => [c[1], c[0]]);
 
-          routingMap.fitBounds(routingLine.getBounds(),{
-            padding:[70,70]
-          });
+        if(routingLine){
+          routingMap.removeLayer(routingLine);
+        }
 
-          const distanceMeters = data.routes[0].distance;
-          const durationSeconds = data.routes[0].duration;
+        routingLine = L.polyline(coordinates,{
+          color:'#ff7a18',
+          weight:7,
+          opacity:0.95,
+          lineJoin:'round'
+        }).addTo(routingMap);
 
-          const km = (distanceMeters/1000).toFixed(2);
-          const minutes = Math.ceil(durationSeconds/60);
-
-          document.getElementById('routeDistance').innerHTML = `
-            ${km} km remaining<br>
-            <span style="font-size:12px;font-weight:600;color:#9a8f82">
-              Estimated time ${minutes} min
-            </span>
-          `;
-
-          // arrival detection
-          if(distanceMeters <= 25){
-            document.getElementById('routeDistance').innerHTML = `
-              ✅ Arrived at destination
-            `;
-
-            if(watchRouteId){
-              navigator.geolocation.clearWatch(watchRouteId);
-            }
-          }
-
-        })
-        .catch(err => {
-          console.log(err);
-
-          document.getElementById('routeDistance').innerHTML = `
-            Unable to calculate route
-          `;
+        routingMap.fitBounds(routingLine.getBounds(),{
+          padding:[70,70]
         });
 
-      // auto fit route
-      routingMap.fitBounds(routingLine.getBounds(),{
-        padding:[60,60]
-      });
+        const minutes = Math.ceil(route.duration / 60);
 
-      // dynamic distance
-      const distance = routingMap.distance(
-        [userLat,userLng],
-        [selected.lat, selected.lng]
-      );
+        document.getElementById('routeDistance').innerHTML = `${minutes} min`;
 
-      const km = (distance/1000).toFixed(2);
-
-      document.getElementById('routeDistance').innerHTML = `
-        Fastest route active<br>
-        Remaining distance: <b>${km} km</b>
-      `;
-
-      // arrival detection
-      if(distance <= 25){
-        document.getElementById('routeDistance').innerHTML = `
-          ✅ You have arrived at <b>${selected.name}</b>
-        `;
-
-        if(watchRouteId){
-          navigator.geolocation.clearWatch(watchRouteId);
+        if(route.distance <= 25){
+          document.getElementById('routeDistance').innerHTML = `Arrived`;
         }
+
+      }catch(err){
+        console.log(err);
+        document.getElementById('routeDistance').innerHTML = `Route unavailable`;
       }
     }
 
     navigator.geolocation.getCurrentPosition((pos)=>{
       updateRoute(pos.coords.latitude, pos.coords.longitude);
+    });
+
+    watchRouteId = navigator.geolocation.watchPosition((pos)=>{
+      updateRoute(pos.coords.latitude, pos.coords.longitude);
+    },(err)=>{
+      console.log(err);
+    },{
+      enableHighAccuracy:true,
+      maximumAge:0,
+      timeout:10000
+    });
+
+    document.querySelectorAll('.travelModeBtn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+
+        document.querySelectorAll('.travelModeBtn').forEach(b=>b.classList.remove('activeMode'));
+        btn.classList.add('activeMode');
+
+        selectedTravelMode = btn.dataset.mode;
+
+        navigator.geolocation.getCurrentPosition((pos)=>{
+          updateRoute(pos.coords.latitude, pos.coords.longitude);
+        });
+      });
     });
 
     // ===== MOBILE DRAGGABLE BOTTOM SHEET =====
@@ -2506,16 +2460,6 @@ window.startRoute = function(name){
       }else{
         sheet.style.transform = 'translateY(0)';
       }
-    });
-
-    watchRouteId = navigator.geolocation.watchPosition((pos)=>{
-      updateRoute(pos.coords.latitude, pos.coords.longitude);
-    },(err)=>{
-      console.log(err);
-    },{
-      enableHighAccuracy:true,
-      maximumAge:0,
-      timeout:10000
     });
 
   },300);
