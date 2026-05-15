@@ -479,6 +479,8 @@
         max-width: 170px !important;
         max-height: 128px !important;
         overflow-y: auto !important;
+        overflow-x:hidden !important;
+        scrollbar-gutter: stable inside !important;
         overflow-x: hidden !important;
         scroll-behavior: smooth !important;
         -webkit-overflow-scrolling: touch !important;
@@ -509,16 +511,17 @@
       }
 
       #legendBox::-webkit-scrollbar{
-        width:4px;
+        width:3px;
       }
 
       #legendBox::-webkit-scrollbar-thumb{
-        background:#ffb27a;
+        background:rgba(255,178,122,0.45);
         border-radius:999px;
       }
 
       #legendBox::-webkit-scrollbar-track{
         background:transparent;
+        margin:6px 0;
       }
     }
   </style>
