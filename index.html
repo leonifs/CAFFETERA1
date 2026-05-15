@@ -2220,15 +2220,15 @@ window.startRoute = function(name){
 
       <div id="routeBottomSheet" style="position:fixed;left:0;bottom:0;width:100%;z-index:5000;display:flex;justify-content:center;font-family:'Montserrat',sans-serif;pointer-events:none">
 
-        <div id="sheetContainer" style="width:100%;max-width:100%;background:rgba(20,20,20,0.96);backdrop-filter:blur(20px);border-top-left-radius:26px;border-top-right-radius:26px;overflow:hidden;box-shadow:0 -10px 40px rgba(0,0,0,0.25);transform:translateY(0);transition:transform 0.35s ease;pointer-events:auto">
+        <div id="sheetContainer" style="width:100%;max-width:100%;background:rgba(248,242,235,0.98);backdrop-filter:blur(20px);border-top-left-radius:26px;border-top-right-radius:26px;overflow:hidden;box-shadow:0 -10px 40px rgba(255,122,24,0.12);transform:translateY(0);transition:transform 0.35s ease;pointer-events:auto">
 
           <div id="sheetHandleArea" style="padding:12px 0 4px;display:flex;justify-content:center;cursor:grab;touch-action:none">
-            <div style="width:70px;height:6px;border-radius:999px;background:#666"></div>
+            <div style="width:70px;height:6px;border-radius:999px;background:#c8b7a6"></div>
           </div>
 
-          <div style="padding:16px 18px 18px;background:linear-gradient(135deg,#8f6b4f,#b28a67);position:relative">
+          <div style="padding:16px 18px 18px;background:linear-gradient(135deg,#ff9f43,#ff7a18);position:relative">
 
-            <div style="position:absolute;right:22px;top:18px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;font-size:22px;backdrop-filter:blur(10px)">
+            <div style="position:absolute;right:22px;top:18px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-size:22px;backdrop-filter:blur(10px)">
               ☕
             </div>
 
@@ -2246,12 +2246,12 @@ window.startRoute = function(name){
             </div>
           </div>
 
-          <div style="padding:18px;background:#171717;color:white">
+          <div style="padding:18px;background:#f5efe7;color:#2b2b2b">
 
             <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
 
               <div style="flex:1;min-width:180px">
-                <div style="font-size:11px;letter-spacing:2px;color:#888;margin-bottom:8px">
+                <div style="font-size:11px;letter-spacing:2px;color:#9a8f82;margin-bottom:8px">
                   ROUTE STATUS
                 </div>
 
@@ -2260,17 +2260,17 @@ window.startRoute = function(name){
                 </div>
               </div>
 
-              <div style="width:56px;height:56px;border-radius:24px;background:linear-gradient(135deg,#2b2b2b,#1b1b1b);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06)">
+              <div style="width:56px;height:56px;border-radius:24px;background:linear-gradient(135deg,#fff7ef,#ffe3c8);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,122,24,0.08)">
                 <span style="font-size:30px">🧭</span>
               </div>
 
             </div>
 
-            <div style="margin-top:16px;background:#202020;border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,0.05)">
+            <div style="margin-top:16px;background:#fff7ef;border-radius:18px;padding:14px;border:1px solid rgba(255,255,255,0.05)">
               <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
 
                 <div>
-                  <div style="font-size:11px;color:#888;letter-spacing:2px">
+                  <div style="font-size:11px;color:#9a8f82;letter-spacing:2px">
                     NAVIGATION MODE
                   </div>
 
@@ -2279,14 +2279,14 @@ window.startRoute = function(name){
                   </div>
                 </div>
 
-                <div style="padding:7px 14px;background:#4f8b68;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1px">
+                <div style="padding:7px 14px;background:#ff8d32;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:1px">
                   LIVE
                 </div>
 
               </div>
             </div>
 
-            <button onclick="backToComap()" style="margin-top:18px;width:100%;border:none;background:linear-gradient(135deg,#8f6b4f,#b28a67);color:white;padding:14px;border-radius:16px;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;box-shadow:0 10px 30px rgba(255,122,24,0.3)">
+            <button onclick="backToComap()" style="margin-top:18px;width:100%;border:none;background:linear-gradient(135deg,#ff9f43,#ff7a18);color:white;padding:14px;border-radius:16px;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;box-shadow:0 10px 30px rgba(255,122,24,0.3)">
               ← BACK TO CO-MAP
             </button>
 
@@ -2299,7 +2299,7 @@ window.startRoute = function(name){
 
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
             <div>
-              <div style="font-size:11px;letter-spacing:2px;color:#888">ROUTE STATUS</div>
+              <div style="font-size:11px;letter-spacing:2px;color:#9a8f82">ROUTE STATUS</div>
               <div id="routeDistance" style="margin-top:6px;font-size:17px;font-weight:700;color:#fff">
                 Calculating fastest route...
               </div>
@@ -2313,7 +2313,7 @@ window.startRoute = function(name){
           <div style="background:#202020;border-radius:20px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.05)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <div>
-                <div style="font-size:11px;color:#888;letter-spacing:2px">NAVIGATION MODE</div>
+                <div style="font-size:11px;color:#9a8f82;letter-spacing:2px">NAVIGATION MODE</div>
                 <div style="margin-top:4px;font-size:15px;font-weight:700">Fastest Route Active</div>
               </div>
 
@@ -2364,21 +2364,66 @@ window.startRoute = function(name){
         }).addTo(routingMap).bindPopup('Your Location');
       }
 
-      // route line live update
-      const routeCoords = [
-        [userLat,userLng],
-        [selected.lat, selected.lng]
-      ];
+      // ===== REAL ROAD NETWORK ROUTING =====
+      const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${userLng},${userLat};${selected.lng},${selected.lat}?overview=full&geometries=geojson`;
 
-      if(routingLine){
-        routingLine.setLatLngs(routeCoords);
-      }else{
-        routingLine = L.polyline(routeCoords,{
-          color:'#ff7a18',
-          weight:6,
-          opacity:0.9
-        }).addTo(routingMap);
-      }
+      fetch(osrmUrl)
+        .then(res => res.json())
+        .then(data => {
+
+          if(!data.routes || !data.routes.length){
+            throw new Error('Route not found');
+          }
+
+          const route = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+
+          if(routingLine){
+            routingMap.removeLayer(routingLine);
+          }
+
+          routingLine = L.polyline(route,{
+            color:'#ff7a18',
+            weight:7,
+            opacity:0.95,
+            lineJoin:'round'
+          }).addTo(routingMap);
+
+          routingMap.fitBounds(routingLine.getBounds(),{
+            padding:[70,70]
+          });
+
+          const distanceMeters = data.routes[0].distance;
+          const durationSeconds = data.routes[0].duration;
+
+          const km = (distanceMeters/1000).toFixed(2);
+          const minutes = Math.ceil(durationSeconds/60);
+
+          document.getElementById('routeDistance').innerHTML = `
+            ${km} km remaining<br>
+            <span style="font-size:12px;font-weight:600;color:#9a8f82">
+              Estimated time ${minutes} min
+            </span>
+          `;
+
+          // arrival detection
+          if(distanceMeters <= 25){
+            document.getElementById('routeDistance').innerHTML = `
+              ✅ Arrived at destination
+            `;
+
+            if(watchRouteId){
+              navigator.geolocation.clearWatch(watchRouteId);
+            }
+          }
+
+        })
+        .catch(err => {
+          console.log(err);
+
+          document.getElementById('routeDistance').innerHTML = `
+            Unable to calculate route
+          `;
+        });
 
       // auto fit route
       routingMap.fitBounds(routingLine.getBounds(),{
