@@ -470,7 +470,40 @@
   transform:translateY(0);
 }
 
-</style>
+
+
+    /* ===== MOBILE LEGEND RESPONSIVE ===== */
+    @media (max-width: 768px){
+      #legendBox{
+        min-width: 170px !important;
+        max-width: 170px !important;
+        padding:10px 11px !important;
+        bottom:12px !important;
+        right:12px !important;
+        border-radius:14px !important;
+      }
+
+      #legendBox label{
+        font-size:11px !important;
+        gap:6px !important;
+        margin:4px 0 !important;
+      }
+
+      #legendBox input[type="range"]{
+        height:3px !important;
+      }
+
+      #legendBox input[type="text"]{
+        width:54px !important;
+        font-size:11px !important;
+        padding:4px 5px !important;
+      }
+
+      #legendBox div{
+        font-size:11px;
+      }
+    }
+  </style>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1771,7 +1804,7 @@ mapBtn.addEventListener('click', function(e){
       <div id="map" style="width:100%;height:100%;"></div>
 
       <!-- FLOAT LEGEND (BOTTOM RIGHT) -->
-      <div style="position:fixed;bottom:20px;right:20px;background:#fff;padding:14px 16px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,0.15);font-family:'Montserrat',sans-serif;z-index:1000;min-width:260px">
+      <div id="legendBox" style="position:fixed;bottom:20px;right:20px;background:#fff;padding:14px 16px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,0.15);font-family:'Montserrat',sans-serif;z-index:1000;min-width:260px;max-width:260px;transition:0.3s ease">
         <div style="font-weight:600;margin-bottom:10px;color:#ff7a18;letter-spacing:1px">COFFEE TYPE</div>
 
         <label style="display:flex;align-items:center;font-size:13px;margin:6px 0;gap:8px">
