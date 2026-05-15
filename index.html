@@ -477,7 +477,14 @@
       #legendBox{
         min-width: 170px !important;
         max-width: 170px !important;
-        padding:10px 11px !important;
+        max-height: 128px !important;
+        overflow-y: auto !important;
+        overflow-x:hidden !important;
+        scrollbar-gutter: stable inside !important;
+        overflow-x: hidden !important;
+        scroll-behavior: smooth !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding:12px 12px !important;
         bottom:12px !important;
         right:12px !important;
         border-radius:14px !important;
@@ -501,6 +508,20 @@
 
       #legendBox div{
         font-size:11px;
+      }
+
+      #legendBox::-webkit-scrollbar{
+        width:3px;
+      }
+
+      #legendBox::-webkit-scrollbar-thumb{
+        background:rgba(255,178,122,0.45);
+        border-radius:999px;
+      }
+
+      #legendBox::-webkit-scrollbar-track{
+        background:transparent;
+        margin:6px 0;
       }
     }
   </style>
@@ -562,28 +583,28 @@
       <div class="donut aesthetic">
         <div class="value">80%</div>
       </div>
-      <p>Aesthetic Coffee</p>
+      <p>AESTHETIC COFFEE</p>
     </div>
 
     <div class="card" data-sheet="Working Coffee">
       <div class="donut cowork">
         <div class="value">70%</div>
       </div>
-      <p>Working Coffee</p>
+      <p>WORKING COFFEE</p>
     </div>
 
     <div class="card" data-sheet="Family Coffee">
       <div class="donut family">
         <div class="value">60%</div>
       </div>
-      <p>Family Coffee</p>
+      <p>FAMILY COFFEE</p>
     </div>
 
     <div class="card" data-sheet="Romantic Coffee">
       <div class="donut romantic">
         <div class="value">50%</div>
       </div>
-      <p>Romantic Coffee</p>
+      <p>ROMANTIC COFFEE</p>
     </div>
 
   </div>
@@ -1545,10 +1566,17 @@ if(document.readyState === 'loading'){
     border-radius:20px 20px 0 0;
   }
 
-  .contact-main{flex-direction:column}
-  .contact-form{width:100%}
-}
-  .contact-cards{flex-direction:column}
+  .contact-main{
+    flex-direction:column;
+  }
+
+  .contact-form{
+    width:100%;
+  }
+
+  .contact-cards{
+    flex-direction:column;
+  }
 }
 
 
@@ -1577,6 +1605,12 @@ homeBtn.addEventListener('click', (e)=>{
 
 document.querySelectorAll('.top-link').forEach(link=>{
   link.addEventListener('click', function(e){
+
+    // hide contact section ketika buka TOP 10
+    const contactSection = document.getElementById('contactSection');
+    if(contactSection){
+      contactSection.style.display = 'none';
+    }
     
     const mini = document.querySelector('.map-list-section');
     if(mini) mini.style.display = 'none';
@@ -1611,7 +1645,7 @@ document.querySelectorAll('.top-link').forEach(link=>{
         padding-top:20px;
       ">
         <h1 style="font-size:22px;letter-spacing:4px;color:#ff7a18;">${title}</h1>
-        <p style="font-family:'Playfair Display', serif; letter-spacing:2px;">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+        <p class="top10-mobile-subtitle" style="font-family:'Playfair Display', serif; letter-spacing:2px;">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
       </div>
     `;
   });
@@ -1703,8 +1737,8 @@ document.querySelectorAll('.top-link').forEach(link=>{
     if(title === "AESTHETIC COFFEE"){
       page.innerHTML = `
         <div style="margin-top:90px;text-align:center">
-          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
-          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <h1 class="top10-mobile-title" style="font-size:32px;letter-spacing:4px;color:#ff7a18;text-transform:uppercase">${title}</h1>
+          <p class="top10-mobile-subtitle" style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
           <div id="sheetTable">Loading data...</div>
         </div>
       `;
@@ -1715,8 +1749,8 @@ document.querySelectorAll('.top-link').forEach(link=>{
     else if(title === "WORKING COFFEE"){
       page.innerHTML = `
         <div style="margin-top:90px;text-align:center">
-          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
-          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <h1 class="top10-mobile-title" style="font-size:32px;letter-spacing:4px;color:#ff7a18;text-transform:uppercase">${title}</h1>
+          <p class="top10-mobile-subtitle" style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
           <div id="sheetTable">Loading data...</div>
         </div>
       `;
@@ -1727,8 +1761,8 @@ document.querySelectorAll('.top-link').forEach(link=>{
     else if(title === "FAMILY COFFEE"){
       page.innerHTML = `
         <div style="margin-top:90px;text-align:center">
-          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
-          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <h1 class="top10-mobile-title" style="font-size:32px;letter-spacing:4px;color:#ff7a18;text-transform:uppercase">${title}</h1>
+          <p class="top10-mobile-subtitle" style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
           <div id="sheetTable">Loading data...</div>
         </div>
       `;
@@ -1738,8 +1772,8 @@ document.querySelectorAll('.top-link').forEach(link=>{
     else if(title === "ROMANTIC COFFEE"){
       page.innerHTML = `
         <div style="margin-top:90px;text-align:center">
-          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
-          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <h1 class="top10-mobile-title" style="font-size:32px;letter-spacing:4px;color:#ff7a18;text-transform:uppercase">${title}</h1>
+          <p class="top10-mobile-subtitle" style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
           <div id="sheetTable">Loading data...</div>
         </div>
       `;
@@ -1750,8 +1784,8 @@ document.querySelectorAll('.top-link').forEach(link=>{
     else{
       page.innerHTML = `
         <div style="margin-top:90px;text-align:center">
-          <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${title}</h1>
-          <p style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
+          <h1 class="top10-mobile-title" style="font-size:32px;letter-spacing:4px;color:#ff7a18;text-transform:uppercase">${title}</h1>
+          <p class="top10-mobile-subtitle" style="font-family:'Playfair Display', serif;letter-spacing:2px">RECOMMENDATION FOR THE BEST COFFE PLACES FOR YOU</p>
         </div>
       `;
     }
@@ -2154,11 +2188,11 @@ window.goToDetail = async function(name){
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
           <a href="${gmaps}" target="_blank" style="display:inline-block;text-align:center;background:#ff7a1a;color:#fff;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:600;font-size:12px;letter-spacing:0.5px;font-family:'Playfair Display', serif">
-            ⤴ GO TO GOOGLE MAPS
+            GO TO GOOGLE MAPS
           </a>
 
-          <button onclick="startRoute('${String(name).replace(/'/g, "\'")}')" style="border:none;background:#222;color:#fff;padding:8px 16px;border-radius:20px;cursor:pointer;font-weight:600;font-size:12px;letter-spacing:0.5px;font-family:'Playfair Display', serif">
-            🧭 ROUTE
+          <button onclick="startRoute('${String(name).replace(/'/g, "\'")}')" style="border:none;background:linear-gradient(135deg,#ff9f43,#ff7a18);color:#fff;padding:8px 16px;border-radius:20px;cursor:pointer;font-weight:600;font-size:12px;letter-spacing:0.5px;font-family:'Playfair Display', serif;box-shadow:0 10px 25px rgba(255,122,24,0.25)">
+            ROUTE
           </button>
         </div>
 
@@ -2262,21 +2296,19 @@ window.startRoute = function(name){
 
           <div style="padding:16px 18px 18px;background:linear-gradient(135deg,#ff9f43,#ff7a18);position:relative">
 
-            <div style="position:absolute;right:22px;top:18px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.22);display:flex;align-items:center;justify-content:center;font-size:22px;backdrop-filter:blur(10px)">
-              ☕
-            </div>
+            
 
             <div style="font-size:10px;letter-spacing:2px;color:rgba(255,255,255,0.85);font-weight:700">
               LIVE NAVIGATION
             </div>
 
-            <div style="margin-top:10px;font-size:clamp(22px,5vw,34px);line-height:0.95;font-family:'Bebas Neue';letter-spacing:2px;color:white;max-width:85%">
+            <div style="margin-top:10px;font-size:clamp(22px,5vw,34px);line-height:0.95;font-family:'Bebas Neue';letter-spacing:2px;color:white;max-width:70%">
               ${selected.name}
             </div>
 
-            <div style="margin-top:12px;display:flex;align-items:center;gap:8px;color:white;font-weight:600;font-size:11px">
-              <span style="width:12px;height:12px;border-radius:50%;background:#00ff99;display:inline-block;box-shadow:0 0 12px #00ff99"></span>
-              GPS CONNECTED
+            <div style="position:absolute;right:20px;top:34px;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:6px;color:white;font-weight:600;font-size:10px;letter-spacing:1px;text-align:right">
+              <span style="width:12px;height:12px;border-radius:50%;background:#00ff99;display:block;box-shadow:0 0 12px #00ff99"></span>
+              <span>GPS CONNECTED</span>
             </div>
           </div>
 
@@ -2298,9 +2330,7 @@ window.startRoute = function(name){
                 </div>
               </div>
 
-              <div style="width:56px;height:56px;border-radius:24px;background:linear-gradient(135deg,#fff7ef,#ffe3c8);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,122,24,0.08)">
-                <span style="font-size:30px">🕒</span>
-              </div>
+              
 
             </div>
 
@@ -2771,8 +2801,8 @@ document.querySelectorAll('.card').forEach(card=>{
 
     page.innerHTML = `
       <div style="margin-top:90px;text-align:center">
-        <h1 style="font-size:32px;letter-spacing:4px;color:#ff7a18">${sheetName}</h1>
-        <p style="font-family:'Playfair Display', serif;letter-spacing:2px">ALL DATA COFFEE SPACE FOR YOU!</p>
+        <h1 class="top10-mobile-title" style="font-size:32px;letter-spacing:4px;color:#ff7a18;text-transform:uppercase">${sheetName}</h1>
+        <p class="top10-mobile-subtitle" style="font-family:'Playfair Display', serif;letter-spacing:2px">ALL DATA COFFEE SPACE FOR YOU!</p>
         <div id="sheetTable">Loading data...</div>
       </div>
     `;
@@ -2783,6 +2813,23 @@ document.querySelectorAll('.card').forEach(card=>{
 </script>
 
 <style>
+
+@media(max-width:900px){
+  .top10-mobile-subtitle{
+    font-size:11px !important;
+    letter-spacing:1px !important;
+    line-height:1.6 !important;
+    padding:0 18px;
+    margin-top:6px;
+  }
+
+  .top10-mobile-title{
+    font-size:22px !important;
+    letter-spacing:2px !important;
+    line-height:1.2 !important;
+    padding:0 14px;
+  }
+}
 
 .nav-item.active{
   color:#ff7a18 !important;
